@@ -13,6 +13,8 @@ import {
   Platform,
 } from 'react-native';
 import WorkoutModal from './components/WorkoutModal';
+import WorkoutList from "./components/WorkoutList"
+import WorkoutInput from "./components/WorkoutInput"
 
 import "../global.css"
 
@@ -120,62 +122,24 @@ const WorkoutLogger: React.FC = () => {
     // Dismiss keyboard when tapping outside input fields
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="flex-1 bg-gradient-to-b from-white to-gray-100 p-6">
+        
         <Text className="text-4xl font-bold text-center text-black mb-8">
           Workout Logger
         </Text>
 
         {/* Input Section */}
-        <View className="mb-6 p-6 bg-gray-50 rounded-2xl">
-          <TextInput
-            className="border border-gray-300 rounded-lg px-4 py-3 mb-4 text-gray-900 text-lg"
-            placeholder="Enter Exercise Name"
-            placeholderTextColor="#6B7280"
-            value={exercise}
-            onChangeText={setExercise}
-          />
-          <TouchableOpacity
-            className="bg-blue-500 rounded-lg py-3 mb-4 active:opacity-80"
-            onPress={handleAddWorkout}
-          >
-            <Text className="text-center text-white text-lg">Add Exercise</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="bg-red-500 rounded-lg py-3 active:opacity-80"
-            onPress={handleClearWorkouts}
-          >
-            <Text className="text-center text-white text-lg">Clear All Workouts</Text>
-          </TouchableOpacity>
-        </View>
+        <WorkoutInput 
+          exercise = {exercise}
+          setExercise = {setExercise}
+          handleAddWorkout = {handleAddWorkout}
+          handleClearWorkouts = {handleClearWorkouts}
+        />
 
         {/* Workout List */}
-        <FlatList
-          data={workouts}
-          renderItem={({ item }) => (
-            <View className="flex-row justify-between items-center p-4 bg-gray-50 rounded-md mb-3">
-              <TouchableOpacity
-                className="flex-1"
-                onPress={() => handleWorkoutSelect(item)}
-              >
-                <View>
-                  <Text className="text-lg font-medium text-black">{item.exercise}</Text>
-                  <Text className="text-sm text-gray-500">{item.date}</Text>
-                </View>
-                <Text className="text-sm text-blue-500">{item.sets.length} sets</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="ml-4 bg-red-500 rounded-md px-3 py-2"
-                onPress={() => handleDeleteWorkout(item.id)}
-              >
-                <Text className="text-white">X</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={
-            <Text className="text-gray-500 text-center mt-6 text-lg">
-              No workouts logged yet. Start adding your first workout!
-            </Text>
-          }
+        <WorkoutList 
+          workouts = {workouts} 
+          handleWorkoutSelect = {handleWorkoutSelect}
+          handleDeleteWorkout = {handleDeleteWorkout}
         />
 
         {/* Modal for Adding Sets */}
