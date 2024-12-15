@@ -2,16 +2,11 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  Modal,
   Alert,
   Keyboard,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
+
 import WorkoutModal from './components/WorkoutModal';
 import WorkoutList from "./components/WorkoutList"
 import WorkoutInput from "./components/WorkoutInput"
@@ -50,7 +45,7 @@ const WorkoutLogger: React.FC = () => {
 
     setWorkouts([...workouts, newWorkout]);
     setExercise('');
-    Keyboard.dismiss(); // Dismiss keyboard after adding workout
+    Keyboard.dismiss(); 
   };
 
   // Add a new set to the selected workout
@@ -122,24 +117,24 @@ const WorkoutLogger: React.FC = () => {
     // Dismiss keyboard when tapping outside input fields
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="flex-1 bg-gradient-to-b from-white to-gray-100 p-6">
-        
+
         <Text className="text-4xl font-bold text-center text-black mb-8">
           Workout Logger
         </Text>
 
         {/* Input Section */}
-        <WorkoutInput 
-          exercise = {exercise}
-          setExercise = {setExercise}
-          handleAddWorkout = {handleAddWorkout}
-          handleClearWorkouts = {handleClearWorkouts}
+        <WorkoutInput
+          exercise={exercise}
+          setExercise={setExercise}
+          handleAddWorkout={handleAddWorkout}
+          handleClearWorkouts={handleClearWorkouts}
         />
 
         {/* Workout List */}
-        <WorkoutList 
-          workouts = {workouts} 
-          handleWorkoutSelect = {handleWorkoutSelect}
-          handleDeleteWorkout = {handleDeleteWorkout}
+        <WorkoutList
+          workouts={workouts}
+          handleWorkoutSelect={handleWorkoutSelect}
+          handleDeleteWorkout={handleDeleteWorkout}
         />
 
         {/* Modal for Adding Sets */}
