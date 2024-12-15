@@ -4,7 +4,17 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        discord: {
+          background: '#23272A', // Dark background
+          card: '#2C2F33',      // Slightly lighter dark
+          text: '#DCDDDE',      // Light gray text
+          muted: '#72767D',     // Muted gray text
+          accent: '#5865F2',    // Discord blue
+        },
+      },
+    },
   },
   plugins: [],
 }

@@ -8,32 +8,25 @@ import {
 
 import "../../global.css"
 
-type Workout = {
-    id: string;
-    exercise: string;
-    sets: { reps: number; weight: number }[];
-    date: string;
-};
-
-type WorkoutModalProps = {
+type WorkoutInputProps = {
     exercise: string;
     setExercise: (exercise: string) => void;
     handleAddWorkout: () => void;
     handleClearWorkouts: () => void;
 };
 
-const WorkoutModal: React.FC<WorkoutModalProps> = ({ exercise, setExercise, handleAddWorkout, handleClearWorkouts }) => {
+const WorkoutInput: React.FC<WorkoutInputProps> = ({ exercise, setExercise, handleAddWorkout, handleClearWorkouts }) => {
     return (
-        <View className="mb-6 p-6 bg-gray-50 rounded-2xl">
+        <View className="mb-6 p-6 bg-discord-background rounded-lg">
             <TextInput
-                className="border border-gray-300 rounded-lg px-4 py-3 mb-4 text-gray-900 text-lg"
+                className="border border-discord-card rounded-lg px-4 py-3 mb-4 text-discord-text text-lg bg-discord-card"
                 placeholder="Enter Exercise Name"
-                placeholderTextColor="#6B7280"
+                placeholderTextColor="#72767D" // Muted gray from Discord theme
                 value={exercise}
                 onChangeText={setExercise}
             />
             <TouchableOpacity
-                className="bg-blue-500 rounded-lg py-3 mb-4 active:opacity-80"
+                className="bg-discord-accent rounded-lg py-3 mb-4 active:opacity-80"
                 onPress={handleAddWorkout}
             >
                 <Text className="text-center text-white text-lg">Add Exercise</Text>
@@ -45,7 +38,9 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ exercise, setExercise, hand
                 <Text className="text-center text-white text-lg">Clear All Workouts</Text>
             </TouchableOpacity>
         </View>
+
+
     )
 }
 
-export default WorkoutModal
+export default WorkoutInput
