@@ -4,12 +4,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    FlatList,
-    Modal,
-    Keyboard,
-    TouchableWithoutFeedback,
-    KeyboardAvoidingView,
-    Platform,
 } from 'react-native';
 
 import "../../global.css"
