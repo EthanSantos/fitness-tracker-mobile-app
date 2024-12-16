@@ -108,19 +108,19 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                                 />
                                 <TextInput
                                     className="border border-gray-700 rounded-lg px-4 py-3 mb-4 text-discord-text text-lg bg-discord-card"
-                                    placeholder="Reps"
-                                    placeholderTextColor="#72767D"
-                                    keyboardType="numeric"
-                                    value={reps}
-                                    onChangeText={setReps}
-                                />
-                                <TextInput
-                                    className="border border-gray-700 rounded-lg px-4 py-3 mb-6 text-discord-text text-lg bg-discord-card"
                                     placeholder="Weight (lbs)"
                                     placeholderTextColor="#72767D"
                                     keyboardType="numeric"
                                     value={weight}
                                     onChangeText={setWeight}
+                                />
+                                <TextInput
+                                    className="border border-gray-700 rounded-lg px-4 py-3 mb-6 text-discord-text text-lg bg-discord-card"
+                                    placeholder="Reps"
+                                    placeholderTextColor="#72767D"
+                                    keyboardType="numeric"
+                                    value={reps}
+                                    onChangeText={setReps}
                                 />
                                 <TouchableOpacity
                                     className="bg-discord-accent rounded-lg py-3 mb-4 active:opacity-80"

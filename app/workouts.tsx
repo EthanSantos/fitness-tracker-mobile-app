@@ -99,7 +99,7 @@ const Workouts: React.FC = () => {
     }, [segments]);
 
     return (
-        <SafeAreaView className="flex-1 bg-discord-background">
+        <SafeAreaView edges={['left', 'right']} className="flex-1 bg-discord-background">
             {/* Custom Header */}
             <CustomHeader
                 title="Workouts"
@@ -140,17 +140,19 @@ const Workouts: React.FC = () => {
                                 </Text>
                                 {/* I formatted the date using the ID that already uses Date.now() */}
                                 <Text className="text-sm text-discord-muted">
-                                    {new Date(parseInt(item.id)).toLocaleDateString()} 
+                                    {new Date(parseInt(item.id)).toLocaleDateString()}
                                 </Text>
                             </TouchableOpacity>
 
                             {/* Delete Button */}
                             <TouchableOpacity
                                 onPress={() => handleDeleteWorkout(item.id)}
-                                className="bg-red-500 p-2 rounded-md ml-3"
+                                className="bg-red-500 rounded-md ml-3 justify-center items-center"
+                                style={{ width: 30, height: 30 }} 
                             >
                                 <Text className="text-white font-bold">X</Text>
                             </TouchableOpacity>
+
                         </View>
                     )}
                 />
