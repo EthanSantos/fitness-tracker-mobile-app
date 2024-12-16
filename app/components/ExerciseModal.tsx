@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import {
     View,
     Text,
@@ -13,88 +13,89 @@ import {
 } from 'react-native';
 import SetFrame from './SetFrame';
 
-import "../../global.css"
+import "../../global.css";
 
-type Workout = {
+type Exercise = {
     id: string;
-    exercise: string;
+    name: string;
     sets: { reps: number; weight: number }[];
     date: string;
 };
 
-type WorkoutModalProps = {
+type ExerciseModalProps = {
     modalVisible: boolean;
     setModalVisible: (visible: boolean) => void;
-    selectedWorkout: Workout | null;
+    selectedExercise: Exercise | null;
     reps: string;
     setReps: (reps: string) => void;
     weight: string;
     setWeight: (weight: string) => void;
     handleAddSet: () => void;
-    workouts: Workout[];
-    setWorkouts: (workouts: Workout[]) => void;
-    setSelectedWorkout: (workout: Workout) => void;
+    exercises: Exercise[];
+    setExercises: (exercises: Exercise[]) => void;
+    setSelectedExercise: (exercise: Exercise) => void;
 };
 
-const WorkoutModal: React.FC<WorkoutModalProps> = ({ modalVisible, setModalVisible, selectedWorkout, reps, setReps, weight, setWeight, handleAddSet, workouts, setWorkouts, setSelectedWorkout }) => {
-
+const ExerciseModal: React.FC<ExerciseModalProps> = ({
+    modalVisible,
+    setModalVisible,
+    selectedExercise,
+    reps,
+    setReps,
+    weight,
+    setWeight,
+    handleAddSet,
+    exercises,
+    setExercises,
+    setSelectedExercise,
+}) => {
     const handleDeleteSet = useCallback(
         (indexToDelete: number): void => {
-            if (selectedWorkout) {
-                console.log("Deleting set at index:", indexToDelete);
-                const updatedSets = selectedWorkout.sets.filter((_, i) => i !== indexToDelete);
-                
-                // Create a new workout object with updated sets
-                const updatedWorkout: Workout = { ...selectedWorkout, sets: updatedSets };
-                
-                // Update the workouts array immutably
-                const updatedWorkouts = workouts.map(workout =>
-                    workout.id === updatedWorkout.id ? updatedWorkout : workout
+            if (selectedExercise) {
+                const updatedSets = selectedExercise.sets.filter((_, i) => i !== indexToDelete);
+
+                const updatedExercise: Exercise = { ...selectedExercise, sets: updatedSets };
+
+                const updatedExercises = exercises.map((exercise) =>
+                    exercise.id === updatedExercise.id ? updatedExercise : exercise
                 );
-                
-                setWorkouts(updatedWorkouts);
-                setSelectedWorkout({ ...selectedWorkout, sets: updatedSets });
-                
+
+                setExercises(updatedExercises);
+                setSelectedExercise({ ...selectedExercise, sets: updatedSets });
             }
         },
-        [selectedWorkout, workouts]
+        [selectedExercise, exercises]
     );
-
 
     return (
         <Modal
             visible={modalVisible}
             animationType="slide"
-            transparent={true} 
+            transparent={true}
             onRequestClose={() => {
                 setModalVisible(false);
                 Keyboard.dismiss();
             }}
         >
-            <TouchableWithoutFeedback
-                onPress={() => {
-                    setModalVisible(false);
-                    Keyboard.dismiss();
-                }}
-            >
-                <View className="flex-1 justify-end bg-transparent mb-10">
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View className="flex-1 justify-end bg-transparent">
                     <KeyboardAvoidingView
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                        className="bg-discord-card rounded-t-3xl p-6"
+                        className="bg-discord-card rounded-t-3xl p-6 pb-8" // Added extra padding-bottom
                     >
-                        {selectedWorkout && (
+                        {selectedExercise && (
                             <>
                                 <Text className="text-2xl font-bold text-discord-text mb-4 text-center">
-                                    {selectedWorkout.exercise}
+                                    {selectedExercise.name}
                                 </Text>
                                 <FlatList
-                                    data={selectedWorkout?.sets}
+                                    data={selectedExercise?.sets}
                                     renderItem={({ item, index }) => (
                                         <SetFrame
                                             item={item}
                                             index={index}
                                             onDelete={(indexToDelete) => {
-                                                handleDeleteSet(indexToDelete)
+                                                handleDeleteSet(indexToDelete);
                                             }}
                                         />
                                     )}
@@ -105,8 +106,6 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ modalVisible, setModalVisib
                                         </Text>
                                     }
                                 />
-
-
                                 <TextInput
                                     className="border border-gray-700 rounded-lg px-4 py-3 mb-4 text-discord-text text-lg bg-discord-card"
                                     placeholder="Reps"
@@ -130,11 +129,8 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ modalVisible, setModalVisib
                                     <Text className="text-center text-white text-lg">Add Set</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    className="bg-gray-700 rounded-lg py-3 active:opacity-80"
-                                    onPress={() => {
-                                        setModalVisible(false);
-                                        Keyboard.dismiss();
-                                    }}
+                                    className="bg-gray-700 rounded-lg py-3 mb-8 active:opacity-80"
+                                    onPress={() => setModalVisible(false)}
                                 >
                                     <Text className="text-center text-gray-200 text-lg">Close</Text>
                                 </TouchableOpacity>
@@ -144,7 +140,7 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ modalVisible, setModalVisib
                 </View>
             </TouchableWithoutFeedback>
         </Modal>
-    )
-}
+    );
+};
 
-export default WorkoutModal
+export default ExerciseModal;

@@ -6,33 +6,39 @@ import {
     FlatList,
 } from 'react-native';
 
-import "../../global.css"
+import "../../global.css";
 
-type Workout = {
+type Exercise = {
     id: string;
-    exercise: string;
+    name: string;
     sets: { reps: number; weight: number }[];
     date: string;
 };
 
-type WorkoutListProps = {
-    workouts: Workout[];
-    handleWorkoutSelect: (item: Workout) => void;
-    handleDeleteWorkout: (id: string) => void;
+type ExerciseListProps = {
+    exercises: Exercise[];
+    handleExerciseSelect: (item: Exercise) => void;
+    handleDeleteExercise: (id: string) => void;
 };
 
-const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, handleWorkoutSelect, handleDeleteWorkout }) => {
+const ExerciseList: React.FC<ExerciseListProps> = ({
+    exercises,
+    handleExerciseSelect,
+    handleDeleteExercise,
+}) => {
     return (
         <FlatList
-            data={workouts}
+            data={exercises}
             renderItem={({ item }) => (
                 <View className="flex-row justify-between items-center p-4 bg-discord-card rounded-md mb-3">
                     <TouchableOpacity
                         className="flex-1"
-                        onPress={() => handleWorkoutSelect(item)}
+                        onPress={() => handleExerciseSelect(item)}
                     >
                         <View>
-                            <Text className="text-lg font-medium text-discord-text">{item.exercise}</Text>
+                            <Text className="text-lg font-medium text-discord-text">
+                                {item.name}
+                            </Text>
                             <Text className="text-sm text-discord-muted">{item.date}</Text>
                         </View>
                         <Text className="text-sm text-discord-accent">
@@ -41,7 +47,7 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, handleWorkoutSelect
                     </TouchableOpacity>
                     <TouchableOpacity
                         className="ml-4 bg-red-500 rounded-md px-3 py-2 active:opacity-80"
-                        onPress={() => handleDeleteWorkout(item.id)}
+                        onPress={() => handleDeleteExercise(item.id)}
                     >
                         <Text className="text-white">X</Text>
                     </TouchableOpacity>
@@ -50,12 +56,11 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, handleWorkoutSelect
             keyExtractor={(item) => item.id}
             ListEmptyComponent={
                 <Text className="text-discord-muted text-center mt-6 text-lg">
-                    No workouts logged yet. Start adding your first workout!
+                    No exercises logged yet. Start adding your first exercise!
                 </Text>
             }
         />
+    );
+};
 
-    )
-}
-
-export default WorkoutList
+export default ExerciseList;

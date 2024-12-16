@@ -6,106 +6,92 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 import axios from 'axios';
-
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import WorkoutModal from './components/WorkoutModal';
-import WorkoutList from "./components/WorkoutList"
-import WorkoutInput from "./components/WorkoutInput"
+import ExerciseModal from './components/ExerciseModal';
+import ExerciseList from "./components/ExerciseList";
+import ExerciseInput from "./components/ExerciseInput";
 import CustomHeader from './components/Header';
 
-import "../global.css"
+import "../global.css";
 
-// Define the Workout data structure
-type Workout = {
+// Define the Exercise data structure
+type Exercise = {
     id: string;
-    exercise: string;
+    name: string;
     sets: { reps: number; weight: number }[];
     date: string;
 };
 
 const ExerciseLog: React.FC = () => {
-    const [workouts, setWorkouts] = useState<Workout[]>([]);
-    const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+    const [exercises, setExercises] = useState<Exercise[]>([]);
+    const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [exercise, setExercise] = useState<string>('');
+    const [exerciseName, setExerciseName] = useState<string>('');
     const [reps, setReps] = useState<string>('');
     const [weight, setWeight] = useState<string>('');
 
+    const router = useRouter();
+
     useEffect(() => {
-
-        const loadWorkouts = async (): Promise<void> => {
+        const loadExercises = async (): Promise<void> => {
             try {
-                const savedWorkouts = await AsyncStorage.getItem('workouts')
-
-                if (savedWorkouts) {
-                    console.log(JSON.parse(savedWorkouts))
-                    setWorkouts(JSON.parse(savedWorkouts))
+                const savedExercises = await AsyncStorage.getItem('exercises');
+                if (savedExercises) {
+                    setExercises(JSON.parse(savedExercises));
                 }
+            } catch (error) {
+                console.error("Error loading exercises", error);
             }
-            catch (error) {
-                console.error("Error saving data", error)
-            }
-        }
+        };
 
-        loadWorkouts()
-    }, [])
+        loadExercises();
+    }, []);
 
-    const postWorkouts = async () => {
-        console.log('Starting axios.post'); // Log before the call
+    const postExercises = async () => {
+        console.log(process.env.EXPO_PUBLIC_API_URL + "/api/exercises")
         try {
-            const response = await axios.post(process.env.EXPO_PUBLIC_API_URL + "/api/workouts", workouts, {
+            const response = await axios.post(process.env.EXPO_PUBLIC_API_URL + "/api/exercises", exercises, {
                 headers: { 'Content-Type': 'application/json' },
             });
-            console.log('Server response:', response.data); // Log the server response
+            console.log('Server response:', response.data);
         } catch (error) {
-            console.error('Error in axios.post:', error); // Log any errors
-        } finally {
-            console.log('Finished axios.post'); // Log after the call
+            console.error('Error posting exercises:', error);
         }
     };
 
     useEffect(() => {
-        saveWorkouts()
-        postWorkouts();
+        saveExercises();
+        postExercises();
+    }, [exercises]);
 
-    }, [workouts])
-
-    const saveWorkouts = async (): Promise<void> => {
+    const saveExercises = async (): Promise<void> => {
         try {
-            console.log(workouts)
-            await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
+            await AsyncStorage.setItem('exercises', JSON.stringify(exercises));
         } catch (error) {
-            console.error('Error saving data', error);
+            console.error('Error saving exercises', error);
         }
-    }
+    };
 
-    // Add a new workout
-    const handleAddWorkout = async (): Promise<void> => {
-        if (!exercise.trim()) {
+    const handleAddExercise = (): void => {
+        if (!exerciseName.trim()) {
             Alert.alert('Error', 'Please enter an exercise name.');
             return;
         }
 
-        const newWorkout: Workout = {
+        const newExercise: Exercise = {
             id: Date.now().toString(),
-            exercise,
+            name: exerciseName,
             sets: [],
             date: new Date().toLocaleDateString(),
         };
 
-        // add new workout here to async local storage
-
-        setWorkouts([...workouts, newWorkout]);
-        // save workouts
-        saveWorkouts()
-        console.log("Adding", newWorkout)
-        console.log(workouts)
-        setExercise('');
+        setExercises([...exercises, newExercise]);
+        setExerciseName('');
         Keyboard.dismiss();
     };
 
-    // Add a new set to the selected workout
     const handleAddSet = (): void => {
         if (!reps.trim() || !weight.trim()) {
             Alert.alert('Error', 'Please fill out both reps and weight.');
@@ -120,101 +106,95 @@ const ExerciseLog: React.FC = () => {
             return;
         }
 
-        if (selectedWorkout) {
-            const updatedWorkout: Workout = {
-                ...selectedWorkout,
+        if (selectedExercise) {
+            const updatedExercise: Exercise = {
+                ...selectedExercise,
                 sets: [
-                    ...selectedWorkout.sets,
+                    ...selectedExercise.sets,
                     { reps: parsedReps, weight: parsedWeight },
                 ],
             };
 
-            setWorkouts((prevWorkouts) => // update that workout to hold the new set
-                prevWorkouts.map((workout) =>
-                    workout.id === selectedWorkout.id ? updatedWorkout : workout
+            setExercises((prevExercises) =>
+                prevExercises.map((exercise) =>
+                    exercise.id === selectedExercise.id ? updatedExercise : exercise
                 )
             );
 
             setReps('');
             setWeight('');
-            setSelectedWorkout(updatedWorkout);
-            Keyboard.dismiss(); // Dismiss keyboard after adding set
+            setSelectedExercise(updatedExercise);
+            Keyboard.dismiss();
         }
     };
 
-    // Delete a specific workout
-    const handleDeleteWorkout = (id: string): void => {
-        Alert.alert('Confirm', 'Are you sure you want to delete this workout?', [
+    const handleDeleteExercise = (id: string): void => {
+        Alert.alert('Confirm', 'Are you sure you want to delete this exercise?', [
             { text: 'Cancel', style: 'cancel' },
             {
                 text: 'Delete',
                 onPress: () =>
-                    setWorkouts((prevWorkouts) =>
-                        prevWorkouts.filter((workout) => workout.id !== id)
+                    setExercises((prevExercises) =>
+                        prevExercises.filter((exercise) => exercise.id !== id)
                     ),
             },
         ]);
     };
 
-    // Select a workout to view details
-    const handleWorkoutSelect = (workout: Workout): void => {
-        setSelectedWorkout(workout);
+    const handleExerciseSelect = (exercise: Exercise): void => {
+        setSelectedExercise(exercise);
         setModalVisible(true);
     };
 
-    // Clear all workouts
+    const clearExercises = async (): Promise<void> => {
+        setExercises([]);
+        saveExercises();
+    };
 
-    const clearWorkouts = async (): Promise<void> => {
-        setWorkouts([])
-        saveWorkouts()
-    }
-
-    const handleClearWorkouts = (): void => {
-        Alert.alert('Confirm', 'Are you sure you want to clear all workouts?', [
+    const handleClearExercises = (): void => {
+        Alert.alert('Confirm', 'Are you sure you want to clear all exercises?', [
             { text: 'Cancel', style: 'cancel' },
-            { text: 'Clear', onPress: () => clearWorkouts() },
+            { text: 'Clear', onPress: () => clearExercises() },
         ]);
     };
 
     return (
-        // Dismiss keyboard when tapping outside input fields
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="flex-1 bg-discord-background">
-                {/* Header */}
-                <CustomHeader title="Workouts" />
+                <CustomHeader
+                    title="Exercises"
+                    onBack={() => router.back()}
+                />
 
-                {/* Input Section */}
                 <View className="px-4">
-                    <WorkoutInput
-                        exercise={exercise}
-                        setExercise={setExercise}
-                        handleAddWorkout={handleAddWorkout}
-                        handleClearWorkouts={handleClearWorkouts}
+                    <ExerciseInput
+                        exerciseName={exerciseName}
+                        setExerciseName={setExerciseName}
+                        handleAddExercise={handleAddExercise}
+                        handleClearExercises={handleClearExercises}
                     />
                 </View>
 
-                {/* Workout List */}
                 <View className="flex-1 px-4 mt-2">
-                    <WorkoutList
-                        workouts={workouts}
-                        handleWorkoutSelect={handleWorkoutSelect}
-                        handleDeleteWorkout={handleDeleteWorkout}
+                    <ExerciseList
+                        exercises={exercises}
+                        handleExerciseSelect={handleExerciseSelect}
+                        handleDeleteExercise={handleDeleteExercise}
                     />
                 </View>
 
-                {/* Modal for Adding Sets */}
-                <WorkoutModal
+                <ExerciseModal
                     modalVisible={modalVisible}
                     setModalVisible={setModalVisible}
-                    selectedWorkout={selectedWorkout}
+                    selectedExercise={selectedExercise}
                     reps={reps}
                     setReps={setReps}
                     weight={weight}
                     setWeight={setWeight}
                     handleAddSet={handleAddSet}
-                    workouts={workouts}
-                    setWorkouts={setWorkouts}
-                    setSelectedWorkout={setSelectedWorkout}
+                    exercises={exercises}
+                    setExercises={setExercises}
+                    setSelectedExercise={setSelectedExercise}
                 />
             </View>
         </TouchableWithoutFeedback>
