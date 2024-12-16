@@ -6,7 +6,7 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 import axios from 'axios';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ExerciseModal from './components/ExerciseModal';
@@ -24,22 +24,31 @@ type Exercise = {
     date: string;
 };
 
+type ExercisesByWorkout = {
+    [workoutId: string]: Exercise[];
+};
+
 const ExerciseLog: React.FC = () => {
-    const [exercises, setExercises] = useState<Exercise[]>([]);
+    const [exercisesByWorkout, setExercisesByWorkout] = useState<ExercisesByWorkout>({});
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [exerciseName, setExerciseName] = useState<string>('');
     const [reps, setReps] = useState<string>('');
     const [weight, setWeight] = useState<string>('');
 
+    const { workoutName, workoutId } = useLocalSearchParams();
+
+    const name = Array.isArray(workoutName) ? workoutName[0] : workoutName || "Untitled Workout";
+    const id = Array.isArray(workoutId) ? workoutId[0] : workoutId || "Unknown ID";
+
     const router = useRouter();
 
     useEffect(() => {
         const loadExercises = async (): Promise<void> => {
             try {
-                const savedExercises = await AsyncStorage.getItem('exercises');
+                const savedExercises = await AsyncStorage.getItem('exercisesByWorkout');
                 if (savedExercises) {
-                    setExercises(JSON.parse(savedExercises));
+                    setExercisesByWorkout(JSON.parse(savedExercises));
                 }
             } catch (error) {
                 console.error("Error loading exercises", error);
@@ -50,9 +59,8 @@ const ExerciseLog: React.FC = () => {
     }, []);
 
     const postExercises = async () => {
-        console.log(process.env.EXPO_PUBLIC_API_URL + "/api/exercises")
         try {
-            const response = await axios.post(process.env.EXPO_PUBLIC_API_URL + "/api/exercises", exercises, {
+            const response = await axios.post(process.env.EXPO_PUBLIC_API_URL + "/api/exercises", exercisesByWorkout[id] || [], {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log('Server response:', response.data);
@@ -64,11 +72,11 @@ const ExerciseLog: React.FC = () => {
     useEffect(() => {
         saveExercises();
         postExercises();
-    }, [exercises]);
+    }, [exercisesByWorkout]);
 
     const saveExercises = async (): Promise<void> => {
         try {
-            await AsyncStorage.setItem('exercises', JSON.stringify(exercises));
+            await AsyncStorage.setItem('exercisesByWorkout', JSON.stringify(exercisesByWorkout));
         } catch (error) {
             console.error('Error saving exercises', error);
         }
@@ -87,7 +95,11 @@ const ExerciseLog: React.FC = () => {
             date: new Date().toLocaleDateString(),
         };
 
-        setExercises([...exercises, newExercise]);
+        setExercisesByWorkout((prevState) => ({
+            ...prevState,
+            [id]: [...(prevState[id] || []), newExercise],
+        }));
+
         setExerciseName('');
         Keyboard.dismiss();
     };
@@ -115,11 +127,12 @@ const ExerciseLog: React.FC = () => {
                 ],
             };
 
-            setExercises((prevExercises) =>
-                prevExercises.map((exercise) =>
+            setExercisesByWorkout((prevState) => ({
+                ...prevState,
+                [id]: (prevState[id] || []).map((exercise) =>
                     exercise.id === selectedExercise.id ? updatedExercise : exercise
-                )
-            );
+                ),
+            }));
 
             setReps('');
             setWeight('');
@@ -128,15 +141,16 @@ const ExerciseLog: React.FC = () => {
         }
     };
 
-    const handleDeleteExercise = (id: string): void => {
+    const handleDeleteExercise = (exerciseId: string): void => {
         Alert.alert('Confirm', 'Are you sure you want to delete this exercise?', [
             { text: 'Cancel', style: 'cancel' },
             {
                 text: 'Delete',
                 onPress: () =>
-                    setExercises((prevExercises) =>
-                        prevExercises.filter((exercise) => exercise.id !== id)
-                    ),
+                    setExercisesByWorkout((prevState) => ({
+                        ...prevState,
+                        [id]: (prevState[id] || []).filter((exercise) => exercise.id !== exerciseId),
+                    })),
             },
         ]);
     };
@@ -147,7 +161,10 @@ const ExerciseLog: React.FC = () => {
     };
 
     const clearExercises = async (): Promise<void> => {
-        setExercises([]);
+        setExercisesByWorkout((prevState) => ({
+            ...prevState,
+            [id]: [],
+        }));
         saveExercises();
     };
 
@@ -162,7 +179,7 @@ const ExerciseLog: React.FC = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="flex-1 bg-discord-background">
                 <CustomHeader
-                    title="Exercises"
+                    title={name}
                     onBack={() => router.back()}
                 />
 
@@ -177,7 +194,7 @@ const ExerciseLog: React.FC = () => {
 
                 <View className="flex-1 px-4 mt-2">
                     <ExerciseList
-                        exercises={exercises}
+                        exercises={exercisesByWorkout[id] || []}
                         handleExerciseSelect={handleExerciseSelect}
                         handleDeleteExercise={handleDeleteExercise}
                     />
@@ -192,8 +209,13 @@ const ExerciseLog: React.FC = () => {
                     weight={weight}
                     setWeight={setWeight}
                     handleAddSet={handleAddSet}
-                    exercises={exercises}
-                    setExercises={setExercises}
+                    exercises={exercisesByWorkout[id] || []}
+                    setExercises={(updatedExercises) =>
+                        setExercisesByWorkout((prevState) => ({
+                            ...prevState,
+                            [id]: updatedExercises,
+                        }))
+                    }
                     setSelectedExercise={setSelectedExercise}
                 />
             </View>
