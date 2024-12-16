@@ -28,7 +28,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                 Exercise Name
             </Text>
             <TextInput
-                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4 shadow-sm"
+                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
                 placeholder="Enter Exercise Name"
                 placeholderTextColor="#72767D"
                 value={exerciseName}
@@ -37,7 +37,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
             {/* Add Exercise Button */}
             <TouchableOpacity
-                className="bg-discord-accent p-4 rounded-lg mb-4 shadow-sm active:opacity-80"
+                className="bg-discord-accent p-4 rounded-lg mb-4 active:opacity-80"
                 onPress={handleAddExercise}
             >
                 <Text className="text-white text-center text-lg font-bold tracking-wide">
@@ -47,7 +47,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
             {/* Clear All Exercises Button */}
             <TouchableOpacity
-                className="bg-discord-error p-4 rounded-lg shadow-sm active:opacity-80"
+                className="bg-discord-error p-4 rounded-lg active:opacity-80"
                 onPress={handleClearExercises}
             >
                 <Text className="text-white text-center text-lg font-bold tracking-wide">

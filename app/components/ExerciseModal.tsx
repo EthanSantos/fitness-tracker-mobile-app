@@ -81,7 +81,7 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                 <View className="flex-1 justify-end bg-transparent">
                     <KeyboardAvoidingView
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                        className="bg-discord-card rounded-t-3xl p-6 pb-8" // Added extra padding-bottom
+                        className="bg-discord-modal rounded-t-3xl p-6 pb-8" // Added extra padding-bottom
                     >
                         {selectedExercise && (
                             <>
@@ -106,33 +106,42 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                                         </Text>
                                     }
                                 />
+                                <Text className="text-lg font-semibold text-discord-text mb-2">
+                                    Weight (lbs)
+                                </Text>
                                 <TextInput
                                     className="border border-gray-700 rounded-lg px-4 py-3 mb-4 text-discord-text text-lg bg-discord-card"
-                                    placeholder="Weight (lbs)"
+                                    placeholder="Enter weight"
                                     placeholderTextColor="#72767D"
                                     keyboardType="numeric"
                                     value={weight}
                                     onChangeText={setWeight}
+                                    returnKeyType="done"
                                 />
+
+                                <Text className="text-lg font-semibold text-discord-text mb-2">
+                                    Reps
+                                </Text>
                                 <TextInput
                                     className="border border-gray-700 rounded-lg px-4 py-3 mb-6 text-discord-text text-lg bg-discord-card"
-                                    placeholder="Reps"
+                                    placeholder="Enter reps"
                                     placeholderTextColor="#72767D"
                                     keyboardType="numeric"
                                     value={reps}
                                     onChangeText={setReps}
+                                    returnKeyType="done"
                                 />
                                 <TouchableOpacity
                                     className="bg-discord-accent rounded-lg py-3 mb-4 active:opacity-80"
                                     onPress={handleAddSet}
                                 >
-                                    <Text className="text-center text-white text-lg">+ Add Set</Text>
+                                    <Text className="text-center text-white text-lg font-bold">+ Add Set</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     className="bg-discord-extraCard rounded-lg py-3 mb-8 active:opacity-80"
                                     onPress={() => setModalVisible(false)}
                                 >
-                                    <Text className="text-center text-gray-200 text-lg">Close</Text>
+                                    <Text className="text-center text-gray-200 text-lg font-bold">Close</Text>
                                 </TouchableOpacity>
                             </>
                         )}

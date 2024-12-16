@@ -10,6 +10,7 @@ module.exports = {
           background: '#23272A', // Dark background
           card: '#2C2F33',      // Slightly lighter dark
           extraCard: '#374151',
+          modal: '#1E2124',
           text: '#DCDDDE',      // Light gray text
           muted: '#72767D',     // Muted gray text
           accent: '#5865F2',    // Discord blue

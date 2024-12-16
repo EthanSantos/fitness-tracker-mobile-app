@@ -27,7 +27,7 @@ const SetFrame: React.FC<SetProps> = ({ index, item, onDelete }) => {
             </View>
 
             {/* Visible Row */}
-            <View className="flex-row justify-between items-center p-4 bg-discord-extraCard rounded-lg mb-3 shadow-sm">
+            <View className="flex-row justify-between items-center p-4 bg-discord-extraCard rounded-lg mb-3">
                 <Text className="text-lg font-semibold text-discord-text">
                     Set {index + 1}
                 </Text>

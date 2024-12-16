@@ -117,7 +117,7 @@ const Workouts: React.FC = () => {
                     Workout Name
                 </Text>
                 <TextInput
-                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4 shadow-sm"
+                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
                     placeholder="Enter workout name"
                     placeholderTextColor="#72767D"
                     value={workoutName}
@@ -125,7 +125,7 @@ const Workouts: React.FC = () => {
                 />
 
                 <TouchableOpacity
-                    className="bg-discord-accent p-4 rounded-lg mb-6 shadow-sm active:opacity-80"
+                    className="bg-discord-accent p-4 rounded-lg mb-6 active:opacity-80"
                     onPress={handleAddWorkout}
                 >
                     <Text className="text-white text-center text-lg font-bold tracking-wide">
@@ -143,7 +143,7 @@ const Workouts: React.FC = () => {
                         </Text>
                     )}
                     renderItem={({ item }) => (
-                        <View className="flex-row items-center justify-between p-4 bg-discord-card rounded-lg mb-3 shadow-sm">
+                        <View className="flex-row items-center justify-between p-4 bg-discord-card rounded-lg mb-3">
                             {/* Workout Details */}
                             <TouchableOpacity
                                 className="flex-1"
@@ -160,7 +160,7 @@ const Workouts: React.FC = () => {
                             {/* Delete Button */}
                             <TouchableOpacity
                                 onPress={() => handleDeleteWorkout(item.id)}
-                                className="bg-discord-error rounded-md justify-center items-center shadow-md"
+                                className="bg-discord-error rounded-md justify-center items-center"
                                 style={{ width: 36, height: 36 }}
                             >
                                 <AntDesign name="minus" size={24} color="white" />
