@@ -11,7 +11,6 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import SetFrame from './SetFrame';
 
 import "../../global.css"

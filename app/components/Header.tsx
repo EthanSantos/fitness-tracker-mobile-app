@@ -7,15 +7,13 @@ type HeaderProps = {
 
 const CustomHeader: React.FC<HeaderProps> = ({ title }) => {
     return (
-        <SafeAreaView className="bg-discord-background">
-            <View className="px-4 py-2">
-                <Text className="text-discord-text font-semibold text-3xl tracking-wide">
+        <SafeAreaView edges={['top', 'left', 'right']} className="bg-discord-background">
+            <View className="px-4 py-4 flex justify-center">
+                <Text className="text-discord-text font-bold text-4xl tracking-wide leading-none">
                     {title}
                 </Text>
             </View>
         </SafeAreaView>
-
-
     );
 };
 
