@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, useSegments } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from './components/Header';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 
 type Workout = {
     id: string;
@@ -123,7 +125,7 @@ const Workouts: React.FC = () => {
                 />
 
                 <TouchableOpacity
-                    className="bg-discord-accent p-4 rounded-lg mb-6 shadow-md active:opacity-80"
+                    className="bg-discord-accent p-4 rounded-lg mb-6 shadow-sm active:opacity-80"
                     onPress={handleAddWorkout}
                 >
                     <Text className="text-white text-center text-lg font-bold tracking-wide">
@@ -161,7 +163,7 @@ const Workouts: React.FC = () => {
                                 className="bg-discord-error rounded-md justify-center items-center shadow-md"
                                 style={{ width: 36, height: 36 }}
                             >
-                                <Text className="text-white font-extrabold">X</Text>
+                                <AntDesign name="minus" size={24} color="white" />
                             </TouchableOpacity>
                         </View>
                     )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 type HeaderProps = {
     title: string;
@@ -17,7 +17,7 @@ const CustomHeader: React.FC<HeaderProps> = ({ title, onBack, titleAlign = 'left
                 <View className="w-12">
                     {onBack ? (
                         <TouchableOpacity onPress={onBack} className="mr-4">
-                            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+                            <AntDesign name="left" size={24} color="white" />
                         </TouchableOpacity>
                     ) : (
                         // Placeholder to maintain symmetry when no back button is present

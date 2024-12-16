@@ -22,13 +22,13 @@ const SetFrame: React.FC<SetProps> = ({ index, item, onDelete }) => {
                     onPress={() => onDelete(index)}
                     className="justify-center items-center h-full"
                 >
-                    <Text className="text-white font-bold">Delete</Text>
+                    <Text className="text-white text-lg font-bold tracking-wide">Delete</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Visible Row */}
-            <View className="flex-row justify-between items-center p-4 bg-discord-extraCard rounded-lg mb-3">
-                <Text className="text-base font-medium text-discord-text">
+            <View className="flex-row justify-between items-center p-4 bg-discord-extraCard rounded-lg mb-3 shadow-sm">
+                <Text className="text-lg font-semibold text-discord-text">
                     Set {index + 1}
                 </Text>
                 <Text className="text-sm text-discord-muted">
@@ -36,6 +36,7 @@ const SetFrame: React.FC<SetProps> = ({ index, item, onDelete }) => {
                 </Text>
             </View>
         </SwipeRow>
+
     );
 };
 

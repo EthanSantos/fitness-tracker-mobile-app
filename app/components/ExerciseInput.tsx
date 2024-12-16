@@ -22,27 +22,40 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
     handleClearExercises,
 }) => {
     return (
-        <View className="mb-6 p-6 bg-discord-background rounded-lg">
+        <View className="mb-6 py-4 bg-discord-background rounded-lg">
+            {/* Input Section */}
+            <Text className="text-discord-text text-lg font-semibold mb-2">
+                Exercise Name
+            </Text>
             <TextInput
-                className="border border-discord-card rounded-lg px-4 py-3 mb-4 text-discord-text text-lg bg-discord-card"
+                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4 shadow-sm"
                 placeholder="Enter Exercise Name"
-                placeholderTextColor="#72767D" // Muted gray from Discord theme
+                placeholderTextColor="#72767D"
                 value={exerciseName}
                 onChangeText={setExerciseName}
             />
+
+            {/* Add Exercise Button */}
             <TouchableOpacity
-                className="bg-discord-accent rounded-lg py-3 mb-4 active:opacity-80"
+                className="bg-discord-accent p-4 rounded-lg mb-4 shadow-sm active:opacity-80"
                 onPress={handleAddExercise}
             >
-                <Text className="text-center text-white text-lg">Add Exercise</Text>
+                <Text className="text-white text-center text-lg font-bold tracking-wide">
+                    + Add Exercise
+                </Text>
             </TouchableOpacity>
+
+            {/* Clear All Exercises Button */}
             <TouchableOpacity
-                className="bg-discord-error rounded-lg py-3 active:opacity-80"
+                className="bg-discord-error p-4 rounded-lg shadow-sm active:opacity-80"
                 onPress={handleClearExercises}
             >
-                <Text className="text-center text-white text-lg">Clear All Exercises</Text>
+                <Text className="text-white text-center text-lg font-bold tracking-wide">
+                    Clear All Exercises
+                </Text>
             </TouchableOpacity>
         </View>
+
     );
 };
 

@@ -126,7 +126,7 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                                     className="bg-discord-accent rounded-lg py-3 mb-4 active:opacity-80"
                                     onPress={handleAddSet}
                                 >
-                                    <Text className="text-center text-white text-lg">Add Set</Text>
+                                    <Text className="text-center text-white text-lg">+ Add Set</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     className="bg-discord-extraCard rounded-lg py-3 mb-8 active:opacity-80"

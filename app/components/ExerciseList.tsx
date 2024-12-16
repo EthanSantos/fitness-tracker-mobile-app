@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     FlatList,
 } from 'react-native';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 import "../../global.css";
 
@@ -46,10 +47,10 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        className="ml-4 bg-discord-error rounded-md px-3 py-2 active:opacity-80"
+                        className="ml-4 bg-discord-error rounded-md px-2 py-2 active:opacity-80"
                         onPress={() => handleDeleteExercise(item.id)}
                     >
-                        <Text className="text-white">X</Text>
+                        <AntDesign name="minus" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
             )}
