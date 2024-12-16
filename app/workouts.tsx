@@ -22,7 +22,7 @@ const Workouts: React.FC = () => {
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [workoutName, setWorkoutName] = useState<string>('');
     const router = useRouter();
-    const segments = useSegments(); // Get the current route segments
+    const segments = useSegments(); // use segments to reload workouts whenever the current route is /workouts
 
     // Load workouts from AsyncStorage
     const loadWorkouts = async () => {
@@ -65,15 +65,20 @@ const Workouts: React.FC = () => {
         Keyboard.dismiss();
     };
 
+    const deleteWorkout = (workoutId: string) => {
+        console.log("Deleted workoutId: ", workoutId)
+        const updatedWorkouts = workouts.filter((workout) => workout.id !== workoutId);
+        setWorkouts(updatedWorkouts);
+        saveWorkouts(updatedWorkouts); // Persist to AsyncStorage
+    }
+
     const handleDeleteWorkout = (workoutId: string) => {
         Alert.alert('Confirm', 'Are you sure you want to delete this workout?', [
             { text: 'Cancel', style: 'cancel' },
             {
                 text: 'Delete',
                 onPress: () => {
-                    const updatedWorkouts = workouts.filter((workout) => workout.id !== workoutId);
-                    setWorkouts(updatedWorkouts);
-                    saveWorkouts(updatedWorkouts); // Persist to AsyncStorage
+                    deleteWorkout(workoutId)
                 },
             },
         ]);
@@ -100,11 +105,12 @@ const Workouts: React.FC = () => {
 
     return (
         <SafeAreaView edges={['left', 'right']} className="flex-1 bg-discord-background">
-            {/* Custom Header */}
             <CustomHeader
                 title="Workouts"
                 onBack={() => router.back()}
+                titleAlign="center"
             />
+
 
             <View className="p-4">
 
@@ -148,7 +154,7 @@ const Workouts: React.FC = () => {
                             <TouchableOpacity
                                 onPress={() => handleDeleteWorkout(item.id)}
                                 className="bg-red-500 rounded-md ml-3 justify-center items-center"
-                                style={{ width: 30, height: 30 }} 
+                                style={{ width: 30, height: 30 }}
                             >
                                 <Text className="text-white font-bold">X</Text>
                             </TouchableOpacity>

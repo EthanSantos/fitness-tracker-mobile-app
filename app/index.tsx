@@ -8,13 +8,20 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <View className="flex-1 justify-center items-center bg-discord-background">
-      <Text className="text-3xl font-bold text-discord-text mb-6">Home Screen</Text>
+    <View className="flex-1 justify-center items-center bg-discord-background px-6">
+      <Text className="text-4xl font-extrabold text-discord-text mb-4 text-center">
+        Welcome to Fitness Tracker
+      </Text>
+
+      <Text className="text-base font-medium text-discord-muted mb-10 text-center">
+        A fitness app developed by Ethan Santos
+      </Text>
+
       <TouchableOpacity
-        className="bg-discord-accent px-6 py-3 rounded-lg active:opacity-80"
+        className="bg-discord-accent px-8 py-4 rounded-xl active:opacity-80 shadow-lg"
         onPress={() => router.push('/workouts')}
       >
-        <Text className="text-lg font-semibold text-white">Workouts</Text>
+        <Text className="text-xl font-semibold text-white">View Workouts</Text>
       </TouchableOpacity>
     </View>
   );
