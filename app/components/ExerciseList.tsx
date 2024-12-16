@@ -46,7 +46,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        className="ml-4 bg-red-500 rounded-md px-3 py-2 active:opacity-80"
+                        className="ml-4 bg-discord-error rounded-md px-3 py-2 active:opacity-80"
                         onPress={() => handleDeleteExercise(item.id)}
                     >
                         <Text className="text-white">X</Text>

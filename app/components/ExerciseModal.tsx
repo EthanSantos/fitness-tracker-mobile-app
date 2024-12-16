@@ -129,7 +129,7 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                                     <Text className="text-center text-white text-lg">Add Set</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    className="bg-gray-700 rounded-lg py-3 mb-8 active:opacity-80"
+                                    className="bg-discord-extraCard rounded-lg py-3 mb-8 active:opacity-80"
                                     onPress={() => setModalVisible(false)}
                                 >
                                     <Text className="text-center text-gray-200 text-lg">Close</Text>

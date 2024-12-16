@@ -105,47 +105,52 @@ const Workouts: React.FC = () => {
 
     return (
         <SafeAreaView edges={['left', 'right']} className="flex-1 bg-discord-background">
-            <CustomHeader
-                title="Workouts"
-                onBack={() => router.back()}
-                titleAlign="center"
-            />
+            {/* Header */}
+            <CustomHeader title="Workouts" onBack={() => router.back()} titleAlign="center" />
 
-
+            {/* Content Container */}
             <View className="p-4">
-
+                {/* Input Section */}
+                <Text className="text-discord-text text-lg font-semibold mb-2">
+                    Workout Name
+                </Text>
                 <TextInput
-                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                    placeholder="Workout Name"
+                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4 shadow-sm"
+                    placeholder="Enter workout name"
                     placeholderTextColor="#72767D"
                     value={workoutName}
                     onChangeText={setWorkoutName}
                 />
 
                 <TouchableOpacity
-                    className="bg-discord-accent p-4 rounded-lg mb-6"
+                    className="bg-discord-accent p-4 rounded-lg mb-6 shadow-md active:opacity-80"
                     onPress={handleAddWorkout}
                 >
-                    <Text className="text-white text-center text-lg font-bold">
-                        Add Workout
+                    <Text className="text-white text-center text-lg font-bold tracking-wide">
+                        + Add Workout
                     </Text>
                 </TouchableOpacity>
 
+                {/* Workout List */}
                 <FlatList
                     data={workouts}
                     keyExtractor={(item) => item.id}
+                    ListEmptyComponent={() => (
+                        <Text className="text-discord-muted text-center mt-10">
+                            No workouts added yet. Start by adding one!
+                        </Text>
+                    )}
                     renderItem={({ item }) => (
-                        <View className="flex-row justify-between items-center p-4 bg-gray-700 rounded-lg mb-3">
-                            {/* Workout Name */}
+                        <View className="flex-row items-center justify-between p-4 bg-discord-card rounded-lg mb-3 shadow-sm">
+                            {/* Workout Details */}
                             <TouchableOpacity
                                 className="flex-1"
                                 onPress={() => navigateToWorkout(item)}
                             >
-                                <Text className="text-base font-medium text-discord-text">
+                                <Text className="text-lg font-semibold text-discord-text tracking-tight">
                                     {item.name}
                                 </Text>
-                                {/* I formatted the date using the ID that already uses Date.now() */}
-                                <Text className="text-sm text-discord-muted">
+                                <Text className="text-sm text-discord-muted mt-1">
                                     {new Date(parseInt(item.id)).toLocaleDateString()}
                                 </Text>
                             </TouchableOpacity>
@@ -153,17 +158,17 @@ const Workouts: React.FC = () => {
                             {/* Delete Button */}
                             <TouchableOpacity
                                 onPress={() => handleDeleteWorkout(item.id)}
-                                className="bg-red-500 rounded-md ml-3 justify-center items-center"
-                                style={{ width: 30, height: 30 }}
+                                className="bg-discord-error rounded-md justify-center items-center shadow-md"
+                                style={{ width: 36, height: 36 }}
                             >
-                                <Text className="text-white font-bold">X</Text>
+                                <Text className="text-white font-extrabold">X</Text>
                             </TouchableOpacity>
-
                         </View>
                     )}
                 />
             </View>
         </SafeAreaView>
+
     );
 };
 

@@ -17,7 +17,7 @@ const SetFrame: React.FC<SetProps> = ({ index, item, onDelete }) => {
             disableRightSwipe={true} // Prevent swiping to the right
         >
             {/* Hidden Row (Delete Button) */}
-            <View className="bg-red-500 justify-center items-end px-4 rounded-lg mb-3">
+            <View className="bg-discord-error justify-center items-end px-4 rounded-lg mb-3">
                 <TouchableOpacity
                     onPress={() => onDelete(index)}
                     className="justify-center items-center h-full"
@@ -27,7 +27,7 @@ const SetFrame: React.FC<SetProps> = ({ index, item, onDelete }) => {
             </View>
 
             {/* Visible Row */}
-            <View className="flex-row justify-between items-center p-4 bg-gray-700 rounded-lg mb-3">
+            <View className="flex-row justify-between items-center p-4 bg-discord-extraCard rounded-lg mb-3">
                 <Text className="text-base font-medium text-discord-text">
                     Set {index + 1}
                 </Text>

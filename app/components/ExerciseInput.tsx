@@ -37,7 +37,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                 <Text className="text-center text-white text-lg">Add Exercise</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                className="bg-red-500 rounded-lg py-3 active:opacity-80"
+                className="bg-discord-error rounded-lg py-3 active:opacity-80"
                 onPress={handleClearExercises}
             >
                 <Text className="text-center text-white text-lg">Clear All Exercises</Text>
