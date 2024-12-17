@@ -14,7 +14,7 @@ export default function Home() {
       </Text>
 
       <Text className="text-base font-medium text-discord-muted mb-10 text-center">
-        A fitness app developed by Ethan Santos!
+        A fitness app developed by Ethan Santos
       </Text>
 
       <TouchableOpacity
