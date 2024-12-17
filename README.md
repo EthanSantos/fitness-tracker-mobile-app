@@ -4,9 +4,10 @@ A personal project developed over winter break to track workouts and exercises. 
 
 ---
 
-**Developed by Ethan Santos**  
-
 ## Tech Stack  
 
 - **Frontend**: React Native  
 - **Backend**: Fastify (Node.js)  
+
+
+**Developed by Ethan Santos**  
