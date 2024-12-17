@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 import ExerciseModal from './components/ExerciseModal';
 import ExerciseList from "./components/ExerciseList";
@@ -100,6 +101,8 @@ const ExerciseLog: React.FC = () => {
             [id]: [...(prevState[id] || []), newExercise],
         }));
 
+        showToast("success", "Exercise Added", exerciseName + " has been added!")
+
         setExerciseName('');
         Keyboard.dismiss();
     };
@@ -134,6 +137,8 @@ const ExerciseLog: React.FC = () => {
                 ),
             }));
 
+            showToast("success", "Set Added", "Set " + (selectedExercise.sets.length + 1) + " has been added!")
+
             setReps('');
             setWeight('');
             setSelectedExercise(updatedExercise);
@@ -141,16 +146,19 @@ const ExerciseLog: React.FC = () => {
         }
     };
 
-    const handleDeleteExercise = (exerciseId: string): void => {
+    const handleDeleteExercise = (exerciseId: string, name: string): void => {
         Alert.alert('Confirm', 'Are you sure you want to delete this exercise?', [
             { text: 'Cancel', style: 'cancel' },
             {
                 text: 'Delete',
                 onPress: () =>
+                {
+                    showToast("error", "Exercise Removed", name + " has been removed!")
                     setExercisesByWorkout((prevState) => ({
                         ...prevState,
                         [id]: (prevState[id] || []).filter((exercise) => exercise.id !== exerciseId),
-                    })),
+                    }))
+                },
             },
         ]);
     };
@@ -171,8 +179,21 @@ const ExerciseLog: React.FC = () => {
     const handleClearExercises = (): void => {
         Alert.alert('Confirm', 'Are you sure you want to clear all exercises?', [
             { text: 'Cancel', style: 'cancel' },
-            { text: 'Clear', onPress: () => clearExercises() },
+            {
+                text: 'Clear', onPress: () => {
+                    clearExercises()
+                    showToast("error", "Exercises Removed", "All of your exercises have been cleared!")
+                }
+            },
         ]);
+    };
+
+    const showToast = (type: string, text1: string, text2: string) => {
+        Toast.show({
+            type: type,
+            text1: text1,
+            text2: text2,
+        });
     };
 
     return (

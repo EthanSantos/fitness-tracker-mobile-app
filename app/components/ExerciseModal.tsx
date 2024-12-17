@@ -11,6 +11,7 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 import SetFrame from './SetFrame';
 
 import "../../global.css";
@@ -49,6 +50,15 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
     setExercises,
     setSelectedExercise,
 }) => {
+
+    const showToast = (type: string, text1: string, text2: string) => {
+        Toast.show({
+            type: type,
+            text1: text1,
+            text2: text2,
+        });
+    };
+
     const handleDeleteSet = useCallback(
         (indexToDelete: number): void => {
             if (selectedExercise) {
@@ -62,6 +72,9 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
 
                 setExercises(updatedExercises);
                 setSelectedExercise({ ...selectedExercise, sets: updatedSets });
+
+                showToast("error", "Set Removed", "Set has been removed!")
+
             }
         },
         [selectedExercise, exercises]

@@ -13,6 +13,7 @@ import { useRouter, useSegments } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from './components/Header';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import Toast from 'react-native-toast-message';
 
 
 type Workout = {
@@ -25,6 +26,14 @@ const Workouts: React.FC = () => {
     const [workoutName, setWorkoutName] = useState<string>('');
     const router = useRouter();
     const segments = useSegments(); // use segments to reload workouts whenever the current route is /workouts
+
+    const showToast = (type: string, text1: string, text2: string) => {
+        Toast.show({
+            type: type,
+            text1: text1,
+            text2: text2,
+        });
+    };
 
     // Load workouts from AsyncStorage
     const loadWorkouts = async () => {
@@ -55,6 +64,8 @@ const Workouts: React.FC = () => {
             return;
         }
 
+        showToast("success", "Success", workoutName + " has been added to your workout!")
+
         const newWorkout: Workout = {
             id: Date.now().toString(),
             name: workoutName.trim(),
@@ -74,13 +85,14 @@ const Workouts: React.FC = () => {
         saveWorkouts(updatedWorkouts); // Persist to AsyncStorage
     }
 
-    const handleDeleteWorkout = (workoutId: string) => {
+    const handleDeleteWorkout = (workoutId: string, name: string) => {
         Alert.alert('Confirm', 'Are you sure you want to delete this workout?', [
             { text: 'Cancel', style: 'cancel' },
             {
                 text: 'Delete',
                 onPress: () => {
                     deleteWorkout(workoutId)
+                    showToast("error", "Workout Removed", name + " has been successfully removed from your list.")
                 },
             },
         ]);
@@ -159,7 +171,7 @@ const Workouts: React.FC = () => {
 
                             {/* Delete Button */}
                             <TouchableOpacity
-                                onPress={() => handleDeleteWorkout(item.id)}
+                                onPress={() => handleDeleteWorkout(item.id, item.name)}
                                 className="bg-discord-error rounded-md justify-center items-center"
                                 style={{ width: 36, height: 36 }}
                             >

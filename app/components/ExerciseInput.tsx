@@ -29,6 +29,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             <Text className="text-discord-text text-lg font-semibold mb-2">
                 Exercise Name
             </Text>
+            
             <ExerciseAutocomplete exerciseName={exerciseName} setExerciseName={setExerciseName}/>
 
             {/* Add Exercise Button */}

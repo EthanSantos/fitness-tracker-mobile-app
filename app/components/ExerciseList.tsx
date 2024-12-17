@@ -19,7 +19,7 @@ type Exercise = {
 type ExerciseListProps = {
     exercises: Exercise[];
     handleExerciseSelect: (item: Exercise) => void;
-    handleDeleteExercise: (id: string) => void;
+    handleDeleteExercise: (id: string, name: string) => void;
 };
 
 const ExerciseList: React.FC<ExerciseListProps> = ({
@@ -48,7 +48,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
                     </TouchableOpacity>
                     <TouchableOpacity
                         className="ml-4 bg-discord-error rounded-md px-2 py-2 active:opacity-80"
-                        onPress={() => handleDeleteExercise(item.id)}
+                        onPress={() => handleDeleteExercise(item.id, item.name)}
                     >
                         <AntDesign name="minus" size={24} color="white" />
                     </TouchableOpacity>
