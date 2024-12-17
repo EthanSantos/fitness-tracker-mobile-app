@@ -6,6 +6,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
+import ExerciseAutocomplete from './ExerciseAutocomplete';
+
 import "../../global.css";
 
 type ExerciseInputProps = {
@@ -27,13 +29,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             <Text className="text-discord-text text-lg font-semibold mb-2">
                 Exercise Name
             </Text>
-            <TextInput
-                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                placeholder="Enter Exercise Name"
-                placeholderTextColor="#72767D"
-                value={exerciseName}
-                onChangeText={setExerciseName}
-            />
+            <ExerciseAutocomplete exerciseName={exerciseName} setExerciseName={setExerciseName}/>
 
             {/* Add Exercise Button */}
             <TouchableOpacity
