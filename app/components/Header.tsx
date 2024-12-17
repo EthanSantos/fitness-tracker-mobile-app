@@ -36,7 +36,6 @@ const CustomHeader: React.FC<HeaderProps> = ({ title, onBack, titleAlign = 'left
 
                 {/* Right Section: Placeholder for symmetry */}
                 <View className="w-12">
-                    {/* Future right-side buttons can be added here */}
                     {/* Currently empty to maintain symmetry */}
                 </View>
             </View>
