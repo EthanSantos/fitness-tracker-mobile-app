@@ -9,9 +9,8 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
 } from 'react-native';
-import CustomHeader from './components/Header';
-import CustomPicker from './components/CustomPicker';
-import NavigationBar from './components/NavigationBar';
+import CustomHeader from '../components/Header';
+import CustomPicker from '../components/CustomPicker';
 
 type GenderOptions = 'Male' | 'Female' | '';
 type ActivityLevelOptions = 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active' | '';
@@ -162,7 +161,6 @@ const Profile: React.FC = () => {
                 </View>
             </TouchableWithoutFeedback>
 
-            <NavigationBar visible />
         </>
     );
 };

@@ -11,7 +11,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, useSegments } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from './components/Header';
+import CustomHeader from '../components/Header';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Toast from 'react-native-toast-message';
 

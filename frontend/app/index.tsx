@@ -19,7 +19,7 @@ export default function Home() {
 
       <TouchableOpacity
         className="bg-discord-accent px-8 py-4 rounded-xl active:opacity-80 shadow-lg"
-        onPress={() => router.push('/workouts')}
+        onPress={() => router.push('/tabs/workouts')}
       >
         <Text className="text-xl font-semibold text-white">View Workouts</Text>
       </TouchableOpacity>

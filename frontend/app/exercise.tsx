@@ -15,7 +15,6 @@ import ExerciseList from "./components/ExerciseList";
 import ExerciseInput from "./components/ExerciseInput";
 import CustomHeader from './components/Header';
 
-import "../global.css";
 
 // Define the Exercise data structure
 type Exercise = {
