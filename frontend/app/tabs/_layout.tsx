@@ -1,4 +1,3 @@
-// TabsLayout.tsx
 import { Tabs } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
@@ -40,7 +39,7 @@ export default function TabsLayout() {
                     tabBarStyle: {
                         backgroundColor: "#2C2F33",
                         borderTopColor: "#23272A",
-                        height: 80, // h-20 = 80
+                        height: 80,
                     },
                     tabBarActiveTintColor: "#DCDDDE",
                     tabBarInactiveTintColor: "#72767D",
