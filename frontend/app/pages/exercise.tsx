@@ -10,10 +10,10 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
-import ExerciseModal from './components/ExerciseModal';
-import ExerciseList from "./components/ExerciseList";
-import ExerciseInput from "./components/ExerciseInput";
-import CustomHeader from './components/Header';
+import ExerciseModal from '../components/ExerciseModal';
+import ExerciseList from "../components/ExerciseList";
+import ExerciseInput from "../components/ExerciseInput";
+import CustomHeader from '../components/Header';
 
 
 // Define the Exercise data structure

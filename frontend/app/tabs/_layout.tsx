@@ -25,7 +25,6 @@ export default function TabsLayout() {
         ],
     }));
 
-
     return (
         <View className="flex-1 bg-[#2C2F33] relative">
             <Tabs

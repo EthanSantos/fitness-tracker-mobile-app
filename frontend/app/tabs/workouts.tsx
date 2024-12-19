@@ -102,7 +102,7 @@ const Workouts: React.FC = () => {
 
     const navigateToWorkout = (workout: Workout) => {
         router.push({
-            pathname: '/exercise',
+            pathname: '/pages/exercise',
             params: { workoutId: workout.id, workoutName: workout.name },
         });
     };
