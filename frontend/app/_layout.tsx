@@ -13,9 +13,11 @@ export default function RootLayout() {
     <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="workouts" />
+        <Stack.Screen name="workouts" options={{ animation: 'ios_from_left' }} />
         <Stack.Screen name="exercise" />
+        <Stack.Screen name="profile" options={{ animation: 'ios_from_right' }} />
       </Stack>
+
 
       <NavigationBar visible={showNavBar} />
 

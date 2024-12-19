@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     View,
     Text,
@@ -14,6 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from './components/Header';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Toast from 'react-native-toast-message';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 
 type Workout = {
@@ -105,22 +107,17 @@ const Workouts: React.FC = () => {
         });
     };
 
-    // Load workouts on initial render
-    useEffect(() => {
-        loadWorkouts();
-    }, []);
-
-    // Reload workouts whenever the current route is /workouts
-    useEffect(() => {
-        if (segments[0] === 'workouts') {
+    // will run whenever th escreen comes into focus (including the first time)
+    useFocusEffect(
+        useCallback(() => {
             loadWorkouts();
-        }
-    }, [segments]);
+        }, [])
+    );
 
     return (
         <SafeAreaView edges={['left', 'right']} className="flex-1 bg-discord-background">
             {/* Header */}
-            <CustomHeader title="Workouts" onBack={() => router.back()} titleAlign="center" />
+            <CustomHeader title="Workouts" titleAlign="center" />
 
             {/* Content Container */}
             <View className="p-4">
