@@ -143,6 +143,7 @@ const Analytics: React.FC = () => {
             }
 
             const averageWeight = totalSets > 0 ? totalWeight / totalSets : 0;
+            // value is the average weight and the label is the date 
             data.push({ value: Math.round(averageWeight), label: formattedDate });
         }
         return data;
@@ -173,7 +174,7 @@ const Analytics: React.FC = () => {
                         <Text className="text-discord-text text-xl font-bold">{totalExercises}</Text>
                     </View>
                     <View className="bg-discord-dark p-4 rounded-lg flex-1 ml-2">
-                        <Text className="text-discord-text text-sm opacity-80">Volume</Text>
+                        <Text className="text-discord-text text-sm opacity-80">Volume (lbs)</Text>
                         <Text className="text-discord-text text-xl font-bold">{Math.round(totalVolume)}</Text>
                     </View>
                 </View>
@@ -216,14 +217,22 @@ const Analytics: React.FC = () => {
                         yAxisTextStyle={{ color: '#DCDDDE', fontSize: 12 }}
                         xAxisLabelTextStyle={{ color: '#DCDDDE', fontSize: 12 }}
                         noOfSections={4}
-                        curved
+                        curved={false}
                         maxValue={Math.ceil(Math.max(...chartData.map(data => data.value)) / 10) * 10}
                         initialSpacing={20}
                         spacing={50}
                         hideRules
                         height={200}
                         width={300}
+                        areaChart
+                        startFillColor="rgb(88, 101, 242)" // Start with transparency
+                        startOpacity={0.8}
+                        endFillColor="rgb(88, 101, 242)" // End with full transparency
+                        endOpacity={0.0}
+                        isAnimated
+                        animationDuration={1200}
                     />
+
                 </View>
 
                 {/* Recent Strongest Lifts */}
