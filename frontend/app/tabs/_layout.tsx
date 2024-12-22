@@ -1,11 +1,11 @@
 import { Tabs } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { View, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
-const tabCount = 2; 
+const tabCount = 3;
 const tabWidth = width / tabCount;
 
 export default function TabsLayout() {
@@ -46,6 +46,15 @@ export default function TabsLayout() {
                     headerShown: false,
                 }}
             >
+                <Tabs.Screen
+                    name="analytics"
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="analytics" size={size} color={color} />
+                        ),
+                        tabBarLabel: "Analytics",
+                    }}
+                />
                 <Tabs.Screen
                     name="workouts"
                     options={{

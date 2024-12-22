@@ -43,8 +43,6 @@ const Profile: React.FC = () => {
             return;
         }
 
-        // needs to send this updated data if its different from the previous save to the backend
-
         const updatedProfileData = {
             name,
             age,
@@ -64,7 +62,9 @@ const Profile: React.FC = () => {
                 showToast("error", "No Changes Detected", "Your profile is already up-to-date.")
                 return;
             }
-    
+
+            // needs to send this updated data if its different from the previous save to the backend
+
             // Save new data if changes are detected
             const jsonValue = JSON.stringify(updatedProfileData);
             await AsyncStorage.setItem('userProfile', jsonValue);
