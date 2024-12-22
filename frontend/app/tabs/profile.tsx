@@ -8,6 +8,8 @@ import {
     ScrollView,
     Keyboard,
     TouchableWithoutFeedback,
+    KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
@@ -112,125 +114,126 @@ const Profile: React.FC = () => {
     );
 
     return (
-        <>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            className="flex-1 bg-discord-background"
+        >
             <TouchableWithoutFeedback onPress={dismissKeyboard}>
                 <View className="flex-1 bg-discord-background">
                     <CustomHeader title="Profile" titleAlign="center" />
 
                     <ScrollView
-                        contentContainerStyle={{
-                            paddingBottom: 80, // Adjust for navigation bar height
-                        }}
+                        contentContainerStyle={{ paddingBottom: 160 }}
+                        className="flex-1 px-6 py-10 space-y-8"
                     >
-                        <View className="px-6 py-10 space-y-8">
-                            {/* Personal Information Section */}
-                            <View>
-                                <Text className="text-discord-text text-2xl font-semibold mb-4">
-                                    Personal Information
-                                </Text>
+                        {/* Personal Information Section */}
+                        <View>
+                            <Text className="text-discord-text text-2xl font-semibold mb-4">
+                                Personal Information
+                            </Text>
 
-                                <Text className="text-discord-text text-lg font-semibold mb-2">
-                                    Name
-                                </Text>
-                                <TextInput
-                                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                                    placeholder="Enter your name"
-                                    placeholderTextColor="#72767D"
-                                    value={name}
-                                    onChangeText={setName}
-                                />
+                            <Text className="text-discord-text text-lg font-semibold mb-2">
+                                Name
+                            </Text>
+                            <TextInput
+                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
+                                placeholder="Enter your name"
+                                placeholderTextColor="#72767D"
+                                value={name}
+                                onChangeText={setName}
+                            />
 
-                                <Text className="text-discord-text text-lg font-semibold mb-2">
-                                    Age
-                                </Text>
-                                <TextInput
-                                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                                    placeholder="Enter your age"
-                                    placeholderTextColor="#72767D"
-                                    keyboardType="number-pad"
-                                    value={age}
-                                    onChangeText={setAge}
-                                />
-                                <CustomPicker
-                                    label="Gender"
-                                    selectedValue={gender}
-                                    onValueChange={setGender}
-                                    options={['Male', 'Female']}
-                                />
-                            </View>
+                            <Text className="text-discord-text text-lg font-semibold mb-2">
+                                Age
+                            </Text>
+                            <TextInput
+                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
+                                placeholder="Enter your age"
+                                placeholderTextColor="#72767D"
+                                keyboardType="number-pad"
+                                value={age}
+                                onChangeText={setAge}
+                            />
+                            <CustomPicker
+                                label="Gender"
+                                selectedValue={gender}
+                                onValueChange={setGender}
+                                options={['Male', 'Female']}
+                            />
+                        </View>
 
-                            {/* Physical Details Section */}
-                            <View>
-                                <Text className="text-discord-text text-2xl font-semibold mb-4">
-                                    Physical Details
-                                </Text>
+                        {/* Physical Details Section */}
+                        <View>
+                            <Text className="text-discord-text text-2xl font-semibold mb-4">
+                                Physical Details
+                            </Text>
 
-                                <Text className="text-discord-text text-lg font-semibold mb-2">
-                                    Weight (lbs)
-                                </Text>
-                                <TextInput
-                                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                                    placeholder="Enter your weight"
-                                    placeholderTextColor="#72767D"
-                                    keyboardType="decimal-pad"
-                                    value={weight}
-                                    onChangeText={setWeight}
-                                />
+                            <Text className="text-discord-text text-lg font-semibold mb-2">
+                                Weight (lbs)
+                            </Text>
+                            <TextInput
+                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
+                                placeholder="Enter your weight"
+                                placeholderTextColor="#72767D"
+                                keyboardType="decimal-pad"
+                                value={weight}
+                                onChangeText={setWeight}
+                            />
 
-                                <Text className="text-discord-text text-lg font-semibold mb-2">
-                                    Height (inches)
-                                </Text>
-                                <TextInput
-                                    className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                                    placeholder="Enter your height"
-                                    placeholderTextColor="#72767D"
-                                    keyboardType="decimal-pad"
-                                    value={height}
-                                    onChangeText={setHeight}
-                                />
-                            </View>
+                            <Text className="text-discord-text text-lg font-semibold mb-2">
+                                Height (inches)
+                            </Text>
+                            <TextInput
+                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
+                                placeholder="Enter your height"
+                                placeholderTextColor="#72767D"
+                                keyboardType="decimal-pad"
+                                value={height}
+                                onChangeText={setHeight}
+                            />
+                        </View>
 
-                            {/* Preferences Section */}
-                            <View>
-                                <Text className="text-discord-text text-2xl font-semibold mb-4">
-                                    Preferences
-                                </Text>
+                        {/* Preferences Section */}
+                        <View>
+                            <Text className="text-discord-text text-2xl font-semibold mb-4">
+                                Preferences
+                            </Text>
 
-                                <CustomPicker
-                                    label="Activity Level"
-                                    selectedValue={activityLevel}
-                                    onValueChange={setActivityLevel}
-                                    options={['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active']}
-                                />
+                            <CustomPicker
+                                label="Activity Level"
+                                selectedValue={activityLevel}
+                                onValueChange={setActivityLevel}
+                                options={['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active']}
+                            />
 
-                                <CustomPicker
-                                    label="Fitness Goal"
-                                    selectedValue={fitnessGoal}
-                                    onValueChange={setFitnessGoal}
-                                    options={[
-                                        'Lose Weight',
-                                        'Build Muscle',
-                                        'Maintain Weight',
-                                        'Increase Stamina',
-                                        'Improve Flexibility',
-                                        'Enhance Endurance',
-                                    ]}
-                                />
-                            </View>
-
-                            {/* Save Button */}
-                            <TouchableOpacity
-                                className="bg-discord-accent px-8 py-4 rounded-xl active:opacity-80 shadow-lg"
-                                onPress={handleSave}
-                            >
-                                <Text className="text-xl font-semibold text-white text-center">Save</Text>
-                            </TouchableOpacity>
+                            <CustomPicker
+                                label="Fitness Goal"
+                                selectedValue={fitnessGoal}
+                                onValueChange={setFitnessGoal}
+                                options={[
+                                    'Lose Weight',
+                                    'Build Muscle',
+                                    'Maintain Weight',
+                                    'Increase Stamina',
+                                    'Improve Flexibility',
+                                    'Enhance Endurance',
+                                ]}
+                            />
                         </View>
                     </ScrollView>
+
+                    {/* Save Button */}
+                    <View className="absolute bottom-0 left-0 right-0 bg-discord-background p-4">
+                        <TouchableOpacity
+                            className="bg-discord-accent px-8 py-4 rounded-xl active:opacity-80 shadow-lg"
+                            onPress={handleSave}
+                        >
+                            <Text className="text-xl font-semibold text-white text-center">Save</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </TouchableWithoutFeedback>
-
-        </>
+        </KeyboardAvoidingView>
     );
 };
 
