@@ -9,7 +9,7 @@ import {
     FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter, useSegments } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../components/Header';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -27,7 +27,6 @@ const Workouts: React.FC = () => {
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [workoutName, setWorkoutName] = useState<string>('');
     const router = useRouter();
-    const segments = useSegments(); // use segments to reload workouts whenever the current route is /workouts
 
     const showToast = (type: string, text1: string, text2: string) => {
         Toast.show({

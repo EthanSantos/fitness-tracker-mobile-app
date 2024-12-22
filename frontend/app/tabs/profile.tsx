@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View,
     Text,
@@ -9,6 +9,10 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+
 import CustomHeader from '../components/Header';
 import CustomPicker from '../components/CustomPicker';
 
@@ -25,21 +29,77 @@ const Profile: React.FC = () => {
     const [activityLevel, setActivityLevel] = useState<ActivityLevelOptions>('');
     const [fitnessGoal, setFitnessGoal] = useState<FitnessGoalOptions>('');
 
-    const handleSave = () => {
+    const showToast = (type: string, text1: string, text2: string) => {
+        Toast.show({
+            type: type,
+            text1: text1,
+            text2: text2,
+        });
+    };
+
+
+    const handleSave = async () => {
         if (!name || !age || !weight || !height || !gender || !activityLevel || !fitnessGoal) {
-            Alert.alert('Incomplete Data', 'Please fill in all fields.');
+            showToast("error", "Incomplete Data", "Please fill in all fields.")
             return;
         }
 
-        Alert.alert(
-            'Profile Saved',
-            `Name: ${name}\nAge: ${age}\nWeight: ${weight} lbs\nHeight: ${height} in\nGender: ${gender}\nActivity Level: ${activityLevel}\nFitness Goal: ${fitnessGoal}`
-        );
+        const profileData = {
+            name,
+            age,
+            weight,
+            height,
+            gender,
+            activityLevel,
+            fitnessGoal,
+        };
+
+        try {
+            const jsonValue = JSON.stringify(profileData);
+
+            await AsyncStorage.setItem('userProfile', jsonValue);
+
+            showToast("success", "Profile Saved", "Your profile successfully saved!")
+        } catch (error) {
+            console.error('Error saving profile:', error);
+            Alert.alert('Error', 'There was a problem saving your profile.');
+        }
+
+    };
+
+    const loadProfile = async () => {
+        try {
+            const savedProfile = await AsyncStorage.getItem('userProfile');
+            if (savedProfile) {
+                const profileData = JSON.parse(savedProfile);
+
+                console.log("Profile loaded", profileData)
+
+                // Update state variables with loaded data
+                setName(profileData.name || '');
+                setAge(profileData.age || '');
+                setWeight(profileData.weight || '');
+                setHeight(profileData.height || '');
+                setGender(profileData.gender || '');
+                setActivityLevel(profileData.activityLevel || '');
+                setFitnessGoal(profileData.fitnessGoal || '');
+            }
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            Alert.alert('Error', 'There was a problem loading your profile.');
+        }
     };
 
     const dismissKeyboard = () => {
         Keyboard.dismiss();
     };
+
+    // will run whenever th escreen comes into focus (including the first time)
+    useFocusEffect(
+        useCallback(() => {
+            loadProfile();
+        }, [])
+    );
 
     return (
         <>
@@ -55,7 +115,7 @@ const Profile: React.FC = () => {
                         <View className="px-6 py-10 space-y-8">
                             {/* Personal Information Section */}
                             <View>
-                                <Text className="text-discord-text text-xl font-semibold mb-4">
+                                <Text className="text-discord-text text-2xl font-semibold mb-4">
                                     Personal Information
                                 </Text>
 
@@ -81,11 +141,17 @@ const Profile: React.FC = () => {
                                     value={age}
                                     onChangeText={setAge}
                                 />
+                                <CustomPicker
+                                    label="Gender"
+                                    selectedValue={gender}
+                                    onValueChange={setGender}
+                                    options={['Male', 'Female']}
+                                />
                             </View>
 
                             {/* Physical Details Section */}
                             <View>
-                                <Text className="text-discord-text text-xl font-semibold mb-4">
+                                <Text className="text-discord-text text-2xl font-semibold mb-4">
                                     Physical Details
                                 </Text>
 
@@ -116,16 +182,9 @@ const Profile: React.FC = () => {
 
                             {/* Preferences Section */}
                             <View>
-                                <Text className="text-discord-text text-xl font-semibold mb-4">
+                                <Text className="text-discord-text text-2xl font-semibold mb-4">
                                     Preferences
                                 </Text>
-
-                                <CustomPicker
-                                    label="Gender"
-                                    selectedValue={gender}
-                                    onValueChange={setGender}
-                                    options={['Male', 'Female']}
-                                />
 
                                 <CustomPicker
                                     label="Activity Level"
