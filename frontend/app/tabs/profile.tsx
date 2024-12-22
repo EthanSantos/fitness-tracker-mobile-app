@@ -37,14 +37,15 @@ const Profile: React.FC = () => {
         });
     };
 
-
     const handleSave = async () => {
         if (!name || !age || !weight || !height || !gender || !activityLevel || !fitnessGoal) {
             showToast("error", "Incomplete Data", "Please fill in all fields.")
             return;
         }
 
-        const profileData = {
+        // needs to send this updated data if its different from the previous save to the backend
+
+        const updatedProfileData = {
             name,
             age,
             weight,
@@ -55,8 +56,17 @@ const Profile: React.FC = () => {
         };
 
         try {
-            const jsonValue = JSON.stringify(profileData);
+            const storedData = await AsyncStorage.getItem('userProfile');
+            const parsedStoredData = storedData ? JSON.parse(storedData) : null;
 
+            // Check if new inputs are the same as stored data
+            if (parsedStoredData && JSON.stringify(parsedStoredData) === JSON.stringify(updatedProfileData)) {
+                showToast("error", "No Changes Detected", "Your profile is already up-to-date.")
+                return;
+            }
+    
+            // Save new data if changes are detected
+            const jsonValue = JSON.stringify(updatedProfileData);
             await AsyncStorage.setItem('userProfile', jsonValue);
 
             showToast("success", "Profile Saved", "Your profile successfully saved!")
