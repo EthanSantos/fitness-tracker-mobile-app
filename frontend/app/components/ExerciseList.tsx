@@ -40,10 +40,11 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
                             </Text>
                         </View>
                         <TouchableOpacity
-                            className="bg-discord-error rounded-md p-2 active:opacity-80"
+                            className="bg-discord-error/10 rounded-lg p-2"
+                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                             onPress={() => handleDeleteExercise(item.id, item.name)}
                         >
-                            <AntDesign name="minus" size={20} color="#FFFFFF" />
+                            <AntDesign name="delete" size={18} color="#ED4245" />
                         </TouchableOpacity>
                     </View>
 
