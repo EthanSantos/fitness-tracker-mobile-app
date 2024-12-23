@@ -231,6 +231,7 @@ const Analytics: React.FC = () => {
                         endOpacity={0.0}
                         isAnimated
                         animationDuration={1200}
+                        showVerticalLines
                     />
 
                 </View>

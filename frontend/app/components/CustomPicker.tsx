@@ -1,13 +1,14 @@
+// CustomPicker.tsx
 import React, { useState } from 'react';
 import {
     View,
     Text,
-    TouchableOpacity,
     Modal,
-    FlatList,
-    TouchableWithoutFeedback,
-    TextInput,
+    TouchableOpacity,
+    Platform,
+    Pressable,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
 
 type CustomPickerProps<T extends string> = {
@@ -24,84 +25,76 @@ const CustomPicker = <T extends string>({
     options,
 }: CustomPickerProps<T>) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [searchText, setSearchText] = useState('');
+    const [tempValue, setTempValue] = useState(selectedValue);
 
-    const handleSelect = (value: T) => {
-        onValueChange(value);
+    const handleConfirm = () => {
+        onValueChange(tempValue);
         setModalVisible(false);
-        setSearchText('');
     };
 
-    const filteredOptions = options.filter(option =>
-        option.toLowerCase().includes(searchText.toLowerCase())
-    );
+    const handleCancel = () => {
+        setTempValue(selectedValue);
+        setModalVisible(false);
+    };
 
     return (
         <View className="mb-6">
             <Text className="text-discord-text text-lg font-semibold mb-2">{label}</Text>
-            <TouchableOpacity
-                className="bg-discord-card flex-row items-center justify-between p-4 rounded-lg border border-discord-muted"
+
+            <Pressable
                 onPress={() => setModalVisible(true)}
-                accessibilityLabel={`Select ${label}`}
-                accessibilityRole="button"
+                className="bg-discord-card flex-row items-center justify-between p-4 rounded-lg border border-discord-muted"
             >
                 <Text className={`text-lg ${selectedValue ? 'text-discord-text' : 'text-gray-500'}`}>
                     {selectedValue || `Select ${label}`}
                 </Text>
                 <MaterialIcons name="arrow-drop-down" size={24} color="#DCDDDE" />
-            </TouchableOpacity>
+            </Pressable>
 
-            {/* Modal */}
             <Modal
-                visible={modalVisible}
-                transparent
                 animationType="fade"
-                onRequestClose={() => setModalVisible(false)}
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={handleCancel}
             >
-                <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-                    <View className="flex-1 justify-center items-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                        <View className="bg-discord-modal w-11/12 max-h-3/4 rounded-lg p-6">
-                            <Text className="text-discord-text text-lg font-semibold mb-4">{label}</Text>
-
-                            {/* Search Bar */}
-                            <TextInput
-                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                                placeholder={`Search ${label}`}
-                                placeholderTextColor="#72767D"
-                                value={searchText}
-                                onChangeText={setSearchText}
-                            />
-
-                            <FlatList
-                                data={filteredOptions}
-                                keyExtractor={(item) => item}
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                        className="py-3 border-b border-discord-muted"
-                                        onPress={() => handleSelect(item)}
-                                    >
-                                        <Text className="text-discord-text text-lg">{item}</Text>
-                                    </TouchableOpacity>
-                                )}
-                                ListEmptyComponent={
-                                    <Text className="text-discord-text text-center text-lg">
-                                        No options found.
-                                    </Text>
-                                }
-                            />
-
-                            <TouchableOpacity
-                                className="mt-4 bg-discord-accent px-6 py-3 rounded-lg items-center"
-                                onPress={() => {
-                                    setModalVisible(false);
-                                    setSearchText('');
-                                }}
-                            >
-                                <Text className="text-white text-lg font-semibold">Close</Text>
+                <Pressable
+                    className="flex-1 justify-center items-center bg-black/50"
+                    onPress={handleCancel}
+                >
+                    <Pressable
+                        className="w-11/12 max-w-xl bg-discord-background rounded-lg overflow-hidden"
+                        onPress={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <View className="flex-row justify-between items-center p-6 border-b border-discord-card">
+                            <TouchableOpacity onPress={handleCancel}>
+                                <Text className="text-discord-accent text-xl">Cancel</Text>
+                            </TouchableOpacity>
+                            <Text className="text-discord-text text-xl font-semibold">Select {label}</Text>
+                            <TouchableOpacity onPress={handleConfirm}>
+                                <Text className="text-discord-accent text-xl font-semibold">Done</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
-                </TouchableWithoutFeedback>
+
+                        {/* Picker Container */}
+                        <View className="bg-discord-card">
+                            <Picker
+                                selectedValue={tempValue}
+                                onValueChange={(value) => setTempValue(value as T)}
+                                itemStyle={{ color: '#ffffff', fontSize: 18, height: 350 }}
+                            >
+                                {options.map((value) => (
+                                    <Picker.Item
+                                        key={value}
+                                        label={value}
+                                        value={value}
+                                        color={Platform.OS === 'ios' ? '#ffffff' : '#000000'}
+                                    />
+                                ))}
+                            </Picker>
+                        </View>
+                    </Pressable>
+                </Pressable>
             </Modal>
         </View>
     );

@@ -10,6 +10,7 @@ import {
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     Platform,
+    Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
@@ -17,16 +18,22 @@ import Toast from 'react-native-toast-message';
 
 import CustomHeader from '../components/Header';
 import CustomPicker from '../components/CustomPicker';
+import HeightPicker from '../components/HeightPicker';
 
 type GenderOptions = 'Male' | 'Female' | '';
 type ActivityLevelOptions = 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active' | '';
 type FitnessGoalOptions = 'Lose Weight' | 'Build Muscle' | 'Maintain Weight' | 'Increase Stamina' | 'Improve Flexibility' | 'Enhance Endurance' | '';
 
+type HeightValue = {
+    feet: number;
+    inches: number;
+}
+
 const Profile: React.FC = () => {
     const [name, setName] = useState<string>('');
     const [age, setAge] = useState<string>('');
     const [weight, setWeight] = useState<string>('');
-    const [height, setHeight] = useState<string>('');
+    const [heightValue, setHeightValue] = useState<HeightValue>({ feet: 5, inches: 0 });
     const [gender, setGender] = useState<GenderOptions>('');
     const [activityLevel, setActivityLevel] = useState<ActivityLevelOptions>('');
     const [fitnessGoal, setFitnessGoal] = useState<FitnessGoalOptions>('');
@@ -39,8 +46,12 @@ const Profile: React.FC = () => {
         });
     };
 
+    const handleHeightChange = (feet: number, inches: number) => {
+        setHeightValue({ feet, inches });
+    };
+
     const handleSave = async () => {
-        if (!name || !age || !weight || !height || !gender || !activityLevel || !fitnessGoal) {
+        if (!name || !age || !weight || !heightValue || !gender || !activityLevel || !fitnessGoal) {
             showToast("error", "Incomplete Data", "Please fill in all fields.")
             return;
         }
@@ -49,7 +60,7 @@ const Profile: React.FC = () => {
             name,
             age,
             weight,
-            height,
+            height: heightValue,
             gender,
             activityLevel,
             fitnessGoal,
@@ -59,15 +70,13 @@ const Profile: React.FC = () => {
             const storedData = await AsyncStorage.getItem('userProfile');
             const parsedStoredData = storedData ? JSON.parse(storedData) : null;
 
-            // Check if new inputs are the same as stored data
             if (parsedStoredData && JSON.stringify(parsedStoredData) === JSON.stringify(updatedProfileData)) {
                 showToast("error", "No Changes Detected", "Your profile is already up-to-date.")
                 return;
             }
 
-            // needs to send this updated data if its different from the previous save to the backend
+            // send user data to backend fastify api
 
-            // Save new data if changes are detected
             const jsonValue = JSON.stringify(updatedProfileData);
             await AsyncStorage.setItem('userProfile', jsonValue);
 
@@ -76,7 +85,6 @@ const Profile: React.FC = () => {
             console.error('Error saving profile:', error);
             Alert.alert('Error', 'There was a problem saving your profile.');
         }
-
     };
 
     const loadProfile = async () => {
@@ -85,13 +93,10 @@ const Profile: React.FC = () => {
             if (savedProfile) {
                 const profileData = JSON.parse(savedProfile);
 
-                console.log("Profile loaded", profileData)
-
-                // Update state variables with loaded data
                 setName(profileData.name || '');
                 setAge(profileData.age || '');
                 setWeight(profileData.weight || '');
-                setHeight(profileData.height || '');
+                setHeightValue(profileData.height || { feet: 5, inches: 0 });
                 setGender(profileData.gender || '');
                 setActivityLevel(profileData.activityLevel || '');
                 setFitnessGoal(profileData.fitnessGoal || '');
@@ -180,16 +185,10 @@ const Profile: React.FC = () => {
                                 onChangeText={setWeight}
                             />
 
-                            <Text className="text-discord-text text-lg font-semibold mb-2">
-                                Height (inches)
-                            </Text>
-                            <TextInput
-                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
-                                placeholder="Enter your height"
-                                placeholderTextColor="#72767D"
-                                keyboardType="decimal-pad"
-                                value={height}
-                                onChangeText={setHeight}
+                            <HeightPicker
+                                feet={heightValue.feet}
+                                inches={heightValue.inches}
+                                onHeightChange={handleHeightChange}
                             />
                         </View>
 

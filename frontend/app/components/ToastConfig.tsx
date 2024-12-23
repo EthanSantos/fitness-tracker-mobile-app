@@ -45,3 +45,6 @@ export const toastConfig: ToastConfig = {
         </View>
     ),
 };
+
+
+export default toastConfig;
