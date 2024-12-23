@@ -10,7 +10,6 @@ import {
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     Platform,
-    Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
@@ -121,14 +120,15 @@ const Profile: React.FC = () => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            className="flex-1 bg-discord-background"
+            style={{ flex: 1 }}
         >
+
             <TouchableWithoutFeedback onPress={dismissKeyboard}>
                 <View className="flex-1 bg-discord-background">
                     <CustomHeader title="Profile" titleAlign="center" />
 
                     <ScrollView
-                        contentContainerStyle={{ paddingBottom: 160 }}
+                        contentContainerStyle={{ paddingBottom: 160, flexGrow: 1 }}
                         className="flex-1 px-6 py-10 space-y-8"
                     >
                         {/* Personal Information Section */}
