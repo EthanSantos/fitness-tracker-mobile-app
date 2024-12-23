@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View,
     Text,
@@ -13,10 +13,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../components/Header';
-import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import WorkoutCard from '../components/WorkoutCard';
+import EmptyWorkoutList from '../components/EmptyWorkoutList';
 
 type Workout = {
     id: string;
@@ -147,27 +148,9 @@ const Workouts: React.FC = () => {
         }, [])
     );
 
-    const EmptyState = () => (
-        <View className="flex-1 items-center justify-center py-10">
-            <MaterialCommunityIcons name="dumbbell" size={64} color="#72767D" />
-            <Text className="text-discord-muted text-lg text-center mt-4 px-6">
-                No workouts added yet.{'\n'}Start building your fitness journey!
-            </Text>
-            <TouchableOpacity
-                className="mt-6 bg-discord-accent px-6 py-3 rounded-full"
-                onPress={() => {
-                    const inputEl = document.querySelector('input');
-                    if (inputEl) inputEl.focus();
-                }}
-            >
-                <Text className="text-white font-semibold">Add Your First Workout</Text>
-            </TouchableOpacity>
-        </View>
-    );
-
     return (
         <SafeAreaView edges={['left', 'right']} className="flex-1 bg-discord-background">
-            <CustomHeader title="My Workouts" titleAlign="center" />
+            <CustomHeader title="Workouts" titleAlign="center" />
 
             <View className="p-4 flex-1">
                 {/* Add Workout Section */}
@@ -220,7 +203,7 @@ const Workouts: React.FC = () => {
                                 navigateToWorkout={navigateToWorkout}
                                 handleDeleteWorkout={handleDeleteWorkout}
                             />}
-                        ListEmptyComponent={EmptyState}
+                        ListEmptyComponent={EmptyWorkoutList}
                         contentContainerStyle={workouts.length === 0 ? { flex: 1 } : { paddingBottom: 20 }}
                         showsVerticalScrollIndicator={false}
                     />
