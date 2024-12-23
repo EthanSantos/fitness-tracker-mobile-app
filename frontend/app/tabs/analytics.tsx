@@ -163,9 +163,9 @@ const Analytics: React.FC = () => {
     const getExerciseChartData = (exerciseName: string): ChartData[] => {
         return workoutData
             .map((workout) => {
-                const exercise = workout.exercises.find((e) => e.name === exerciseName);
+                const exercise = workout.exercises.find((e) => e.name === exerciseName); // gets all the exercise data for the exerciseName we are looking for
                 if (exercise) {
-                    const oneRepMax = Math.max(...exercise.sets.map((set) => calculateOneRepMax(set.weight, set.reps)));
+                    const oneRepMax = Math.max(...exercise.sets.map((set) => calculateOneRepMax(set.weight, set.reps))); // calculates the one rep max for every set that day and gets the highest one
                     const [month, day] = workout.date.split('/');
                     return { value: oneRepMax, label: `${month}/${day}` };
                 }
