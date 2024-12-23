@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import CustomHeader from '../components/Header';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { LineChart } from 'react-native-gifted-charts';
+import { View, ScrollView } from 'react-native';
+
+import ChartContainer from '../components/ChartContainer';
+import ExerciseBreakdown from '../components/ExerciseBreakdown'; 
+import StatsCard from '../components/StatsCard'; 
+import StrongestLifts from '../components/StrongestLifts'; 
+import TimeframeSelector from '../components/TimeframeSelector';
 
 // Define a type for a single set
 type Set = {
@@ -146,7 +151,6 @@ const workoutData: Workout[] = [
     },
 ];
 
-
 const Analytics: React.FC = () => {
     const [selectedTimeframe, setSelectedTimeframe] = useState<'week' | 'month'>('week');
     const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
@@ -241,159 +245,45 @@ const Analytics: React.FC = () => {
     // Variables calculated using the functions
     const totalExercises = getTotalExercises(workoutData); // Get total number of exercises
     const totalVolume = getTotalVolume(workoutData);       // Get total volume lifted
+    const strongestLifts = getStrongestLifts(workoutData);
     const chartData = getChartData(workoutData);           // Get chart data
-
+    
     // Calculate additional stats
     const totalWorkouts = workoutData.length;
 
+    const uniqueExercises = Array.from(new Set(workoutData.flatMap((workout) => workout.exercises.map((e) => e.name)))) // get a list of all the unique exercises
+
     return (
         <ScrollView className="flex-1 bg-discord-background">
-            <CustomHeader title="Analytics" titleAlign="center" />
+        <CustomHeader title="Analytics" titleAlign="center" />
 
-            {/* Main Content Container */}
-            <View className="px-4">
-                {/* Stats Cards */}
-                <View className="flex-row justify-between mb-6">
-                    <View className="bg-discord-dark p-4 rounded-lg flex-1 mr-2">
-                        <Text className="text-discord-text text-sm opacity-80">Workouts</Text>
-                        <Text className="text-discord-text text-xl font-bold">{totalWorkouts}</Text>
-                    </View>
-                    <View className="bg-discord-dark p-4 rounded-lg flex-1 mx-2">
-                        <Text className="text-discord-text text-sm opacity-80">Exercises</Text>
-                        <Text className="text-discord-text text-xl font-bold">{totalExercises}</Text>
-                    </View>
-                    <View className="bg-discord-dark p-4 rounded-lg flex-1 ml-2">
-                        <Text className="text-discord-text text-sm opacity-80">Volume (lbs)</Text>
-                        <Text className="text-discord-text text-xl font-bold">{Math.round(totalVolume)}</Text>
-                    </View>
-                </View>
-
-                {/* Timeframe Selector */}
-                <View className="flex-row mb-6 bg-discord-dark rounded-lg p-1">
-                    <TouchableOpacity
-                        onPress={() => setSelectedTimeframe('week')}
-                        className={`flex-1 p-2 rounded-md ${selectedTimeframe === 'week' ? 'bg-discord-accent' : ''}`}
-                    >
-                        <Text className={`text-center text-discord-text ${selectedTimeframe === 'week' ? 'font-bold' : 'opacity-80'}`}>
-                            Week
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => setSelectedTimeframe('month')}
-                        className={`flex-1 p-2 rounded-md ${selectedTimeframe === 'month' ? 'bg-discord-accent' : ''}`}
-                    >
-                        <Text className={`text-center text-discord-text ${selectedTimeframe === 'month' ? 'font-bold' : 'opacity-80'}`}>
-                            Month
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-
-                {/* Chart Container */}
-                <View className="bg-discord-dark p-4 rounded-lg mb-6">
-                    <Text className="text-discord-text text-lg font-bold mb-4">
-                        Average Weight Per Session
-                    </Text>
-                    <LineChart
-                        data={chartData}
-                        thickness={3}
-                        color="#5865F2"
-                        hideDataPoints={false}
-                        dataPointsColor="#5865F2"
-                        dataPointsRadius={5}
-                        yAxisColor="rgba(220, 221, 222, 0.2)"
-                        xAxisColor="rgba(220, 221, 222, 0.2)"
-                        verticalLinesColor="rgba(220, 221, 222, 0.1)"
-                        yAxisTextStyle={{ color: '#DCDDDE', fontSize: 12 }}
-                        xAxisLabelTextStyle={{ color: '#DCDDDE', fontSize: 12 }}
-                        noOfSections={4}
-                        curved={false}
-                        maxValue={Math.ceil(Math.max(...chartData.map(data => data.value)) / 10) * 10}
-                        initialSpacing={20}
-                        spacing={50}
-                        hideRules
-                        height={200}
-                        width={300}
-                        areaChart
-                        startFillColor="rgb(88, 101, 242)" // Start with transparency
-                        startOpacity={0.8}
-                        endFillColor="rgb(88, 101, 242)" // End with full transparency
-                        endOpacity={0.0}
-                        isAnimated
-                        animationDuration={1200}
-                        showVerticalLines
-                    />
-                </View>
-
-                {/* Recent Strongest Lifts */}
-                < View className="bg-discord-dark p-4 rounded-lg" >
-                    <Text className="text-discord-text text-lg font-bold mb-4">Recent Strongest Lifts</Text>
-                    {getStrongestLifts(workoutData).map((lift, index) => (
-                        <View key={index} className="flex-row justify-between items-center mb-3">
-                            <Text className="text-discord-text font-semibold">{lift.name}</Text>
-                            <Text className="text-discord-text opacity-80">
-                                {lift.maxWeight} lbs @ {lift.reps} reps
-                            </Text>
-                        </View>
-                    ))}
-                </ View >
-
-
-                {/* Exercise Breakdown Dropdown */}
-                <View className="bg-discord-dark p-4 rounded-lg mb-6">
-                    <Text className="text-discord-text text-lg font-bold mb-4">
-                        Exercise Breakdown
-                    </Text>
-                    {Array.from(new Set(workoutData.flatMap((workout) => workout.exercises.map((e) => e.name))))
-                        .map((exerciseName, index) => (
-                            <View key={index} className="mb-3">
-                                <TouchableOpacity
-                                    onPress={() => toggleDropdown(exerciseName)}
-                                    className="p-3 bg-discord-accent rounded-md"
-                                >
-                                    <Text className="text-discord-text font-semibold">{exerciseName}</Text>
-                                </TouchableOpacity>
-                                {selectedExercise === exerciseName && (
-                                    <View className="mt-2 bg-discord-dark p-2 rounded-md">
-                                        <Text className="text-discord-text font-bold mb-4">
-                                            {exerciseName} 1 Rep Max Over Time
-                                        </Text>
-                                        <LineChart
-                                            data={getExerciseChartData(exerciseName)}
-                                            thickness={3}
-                                            color="#5865F2"
-                                            hideDataPoints={false}
-                                            dataPointsColor="#5865F2"
-                                            dataPointsRadius={5}
-                                            yAxisColor="rgba(220, 221, 222, 0.2)"
-                                            xAxisColor="rgba(220, 221, 222, 0.2)"
-                                            verticalLinesColor="rgba(220, 221, 222, 0.1)"
-                                            yAxisTextStyle={{ color: '#DCDDDE', fontSize: 12 }}
-                                            xAxisLabelTextStyle={{ color: '#DCDDDE', fontSize: 12 }}
-                                            noOfSections={4}
-                                            curved={false}
-                                            maxValue={Math.ceil(Math.max(...getExerciseChartData(exerciseName).map((data) => data.value)) / 10) * 10}
-                                            initialSpacing={20}
-                                            spacing={50}
-                                            hideRules
-                                            height={200}
-                                            width={300}
-                                            areaChart
-                                            startFillColor="rgb(88, 101, 242)"
-                                            startOpacity={0.8}
-                                            endFillColor="rgb(88, 101, 242)"
-                                            endOpacity={0.0}
-                                            isAnimated
-                                            animationDuration={1200}
-                                            showVerticalLines
-                                        />
-                                    </View>
-                                )}
-                            </View>
-                        ))}
-                </View>
+        <View className="px-4 py-6 space-y-6">
+            <View className="flex-row justify-between space-x-2">
+                <StatsCard title="Workouts" value={totalWorkouts} />
+                <StatsCard title="Exercises" value={totalExercises} />
+                <StatsCard title="Volume (lbs)" value={Math.round(totalVolume)} />
             </View>
-        </ScrollView>
+
+            <TimeframeSelector
+                selectedTimeframe={selectedTimeframe}
+                onSelectTimeframe={setSelectedTimeframe}
+            />
+
+            <ChartContainer
+                title="Average Weight Per Session"
+                data={chartData}
+            />
+
+            <StrongestLifts lifts={strongestLifts} />
+
+            <ExerciseBreakdown
+                exercises={uniqueExercises}
+                selectedExercise={selectedExercise}
+                toggleDropdown={toggleDropdown}
+                getExerciseChartData={getExerciseChartData}
+            />
+        </View>
+    </ScrollView>
     );
 };
 
