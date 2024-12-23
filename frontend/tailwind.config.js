@@ -15,6 +15,7 @@ module.exports = {
           muted: '#72767D',     // Muted gray text
           accent: '#5865F2',    // Discord blue
           error: '#EF4444',
+          warning: '#F3B441',    // Gold for warnings or alerts
         },
       },
     },

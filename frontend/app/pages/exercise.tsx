@@ -146,6 +146,7 @@ const ExerciseLog: React.FC = () => {
     };
 
     const handleDeleteExercise = (exerciseId: string, name: string): void => {
+        // need to save these exercises here
         Alert.alert('Confirm', 'Are you sure you want to delete this exercise?', [
             { text: 'Cancel', style: 'cancel' },
             {

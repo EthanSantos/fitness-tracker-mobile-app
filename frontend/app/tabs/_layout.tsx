@@ -25,7 +25,7 @@ export default function TabsLayout() {
     }));
 
     return (
-        <View className="flex-1 bg-[#2C2F33] relative">
+        <View className="flex-1 bg-discord-background relative">
             <Tabs
                 screenListeners={{
                     state: (e) => {
