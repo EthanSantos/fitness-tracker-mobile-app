@@ -60,10 +60,6 @@ const Analytics: React.FC = () => {
     const getExerciseChartData = (exerciseName: string): ChartData[] => {
         // need to sort exercise data by date first
 
-        workoutData.forEach((workout) => {
-            console.log(`Parsed Date: ${new Date(workout.date)} for Workout: ${workout.date}`);
-        });
-
         return workoutData.sort(dateComparison)
             .map((workout) => {
                 const exercise = workout.exercises.find((e) => e.name === exerciseName); // gets all the exercise data for the exerciseName we are looking for
