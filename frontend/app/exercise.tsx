@@ -8,7 +8,7 @@ import {
 import axios from 'axios';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
+import { showToast } from './components/ShowToast';
 
 import ExerciseModal from './components/ExerciseModal';
 import ExerciseList from "./components/ExerciseList";
@@ -151,8 +151,7 @@ const ExerciseLog: React.FC = () => {
             { text: 'Cancel', style: 'cancel' },
             {
                 text: 'Delete',
-                onPress: () =>
-                {
+                onPress: () => {
                     showToast("error", "Exercise Removed", name + " has been removed!")
                     setExercisesByWorkout((prevState) => ({
                         ...prevState,
@@ -186,14 +185,6 @@ const ExerciseLog: React.FC = () => {
                 }
             },
         ]);
-    };
-
-    const showToast = (type: string, text1: string, text2: string) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-        });
     };
 
     return (

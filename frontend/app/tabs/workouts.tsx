@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../components/Header';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
+import { showToast } from '../components/ShowToast';
 import WorkoutCard from '../components/WorkoutCard';
 import EmptyWorkoutList from '../components/EmptyWorkoutList';
 
@@ -36,14 +36,6 @@ const Workouts: React.FC = () => {
     const [workoutName, setWorkoutName] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
-
-    const showToast = (type: string, text1: string, text2: string) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-        });
-    };
 
     const loadWorkouts = async () => {
         try {

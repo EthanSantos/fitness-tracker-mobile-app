@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
+import { showToast } from '../components/ShowToast';
 
 import CustomHeader from '../components/Header';
 import CustomPicker from '../components/CustomPicker';
@@ -36,14 +36,6 @@ const Profile: React.FC = () => {
     const [gender, setGender] = useState<GenderOptions>('');
     const [activityLevel, setActivityLevel] = useState<ActivityLevelOptions>('');
     const [fitnessGoal, setFitnessGoal] = useState<FitnessGoalOptions>('');
-
-    const showToast = (type: string, text1: string, text2: string) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-        });
-    };
 
     const handleHeightChange = (feet: number, inches: number) => {
         setHeightValue({ feet, inches });
