@@ -44,8 +44,27 @@ const Analytics: React.FC = () => {
         return Math.round(weight * (1 + reps / 30));
     };
 
+    function parseDate(dateString: string): Date {
+        // parse data in the correct date format
+        const [month, day, year] = dateString.split('/');
+        return new Date(`${year}-${month}-${day}`);
+    }
+
+    function dateComparison(a: Workout, b: Workout) {
+        const date1 = parseDate(a.date)
+        const date2 = parseDate(b.date)
+        
+        return date1.valueOf() - date2.valueOf();
+    }
+
     const getExerciseChartData = (exerciseName: string): ChartData[] => {
-        return workoutData
+        // need to sort exercise data by date first
+
+        workoutData.forEach((workout) => {
+            console.log(`Parsed Date: ${new Date(workout.date)} for Workout: ${workout.date}`);
+        });
+
+        return workoutData.sort(dateComparison)
             .map((workout) => {
                 const exercise = workout.exercises.find((e) => e.name === exerciseName); // gets all the exercise data for the exerciseName we are looking for
                 if (exercise) {
