@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { Ionicons } from '@expo/vector-icons';
 
 type Exercise = {
     id: string;
@@ -50,20 +51,31 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
 
                     {/* Sets Section */}
                     <View className="bg-discord-extraCard rounded-md px-3 py-2">
-                        {item.sets.map((set, index) => (
-                            <View
-                                key={index}
-                                className="flex-row justify-between items-center py-2"
-                            >
-                                <Text className="text-base font-medium text-discord-text">
-                                    Set {index + 1}
-                                </Text>
-                                <Text className="text-base text-discord-accent font-semibold">
-                                    {set.reps} reps @ {set.weight} lbs
+                        {item.sets.length > 0 ? (
+                            item.sets.map((set, index) => (
+                                <View
+                                    key={index}
+                                    className="flex-row justify-between items-center py-2"
+                                >
+                                    <Text className="text-base font-medium text-discord-text">
+                                        Set {index + 1}
+                                    </Text>
+                                    <Text className="text-base text-discord-accent font-semibold">
+                                        {set.reps} reps @ {set.weight} lbs
+                                    </Text>
+                                </View>
+                            ))
+                        ) : (
+                            <View className="flex-row items-center justify-center py-1 px-2 rounded-xl">
+                                <Ionicons name="add-circle-outline" size={20} color="#5865F2" />
+                                <Text className="text-discord-accent font-medium ml-2">
+                                    Tap to add a set
                                 </Text>
                             </View>
-                        ))}
+                        )}
                     </View>
+
+
                 </TouchableOpacity>
             )}
             keyExtractor={(item) => item.id}
