@@ -10,6 +10,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="tabs" options={{ animation: "ios_from_right" }} />
         <Stack.Screen name="exercise" />
+        <Stack.Screen name="exercise-chart" />
       </Stack>
 
       <Toast config={toastConfig} />

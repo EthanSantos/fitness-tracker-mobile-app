@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CustomHeader from '../components/Header';
-import { View, ScrollView } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import ChartContainer from '../components/ChartContainer';
 import ExerciseBreakdown from '../components/ExerciseBreakdown';
@@ -33,11 +33,6 @@ type ChartData = { value: number; label: string };
 
 const Analytics: React.FC = () => {
     const [selectedTimeframe, setSelectedTimeframe] = useState<'day' | 'week'>('day');
-    const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
-
-    const toggleDropdown = (exerciseName: string) => {
-        setSelectedExercise((prev) => (prev === exerciseName ? null : exerciseName));
-    };
 
     // Calculate the one-rep max using the Epley formula: weight * (1 + reps / 30)
     const calculateOneRepMax = (weight: number, reps: number): number => {
@@ -53,7 +48,7 @@ const Analytics: React.FC = () => {
     function dateComparison(a: Workout, b: Workout) {
         const date1 = parseDate(a.date)
         const date2 = parseDate(b.date)
-        
+
         return date1.valueOf() - date2.valueOf();
     }
 
@@ -167,37 +162,45 @@ const Analytics: React.FC = () => {
 
     const uniqueExercises = Array.from(new Set(workoutData.flatMap((workout) => workout.exercises.map((e) => e.name)))) // get a list of all the unique exercises
 
+    const renderItem = () => null;
+    
     return (
-        <ScrollView className="flex-1 bg-discord-background">
-            <CustomHeader title="Analytics" titleAlign="center" />
+        <FlatList
+            data={[]}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()} // Safe for an empty list
+            className="flex-1 bg-discord-background"
+            ListHeaderComponent={
+                <>
+                    <CustomHeader title="Analytics" titleAlign="center" />
 
-            <View className="px-4 py-6 space-y-6">
-                <View className="flex-row justify-between space-x-2">
-                    <StatsCard title="Workouts" value={totalWorkouts} />
-                    <StatsCard title="Exercises" value={totalExercises} />
-                    <StatsCard title="Volume (lbs)" value={Math.round(totalVolume)} />
-                </View>
+                    <View className="px-4 py-6 space-y-6">
+                        <View className="flex-row justify-between space-x-2">
+                            <StatsCard title="Workouts" value={totalWorkouts} />
+                            <StatsCard title="Exercises" value={totalExercises} />
+                            <StatsCard title="Volume (lbs)" value={Math.round(totalVolume)} />
+                        </View>
 
-                <TimeframeSelector
-                    selectedTimeframe={selectedTimeframe}
-                    onSelectTimeframe={setSelectedTimeframe}
-                />
+                        <TimeframeSelector
+                            selectedTimeframe={selectedTimeframe}
+                            onSelectTimeframe={setSelectedTimeframe}
+                        />
 
-                <ChartContainer
-                    title="Average Weight Per Session"
-                    data={chartData}
-                />
+                        <ChartContainer
+                            title="Average Weight Per Session"
+                            data={chartData}
+                        />
 
-                <StrongestLifts lifts={strongestLifts} />
+                        <StrongestLifts lifts={strongestLifts} />
 
-                <ExerciseBreakdown
-                    exercises={uniqueExercises}
-                    selectedExercise={selectedExercise}
-                    toggleDropdown={toggleDropdown}
-                    getExerciseChartData={getExerciseChartData}
-                />
-            </View>
-        </ScrollView>
+                        <ExerciseBreakdown
+                            exercises={uniqueExercises}
+                            getExerciseChartData={getExerciseChartData}
+                        />
+                    </View>
+                </>
+            }
+        />
     );
 };
 

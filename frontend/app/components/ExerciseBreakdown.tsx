@@ -1,87 +1,113 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
-import { LineChart } from 'react-native-gifted-charts';
-import Entypo from '@expo/vector-icons/Entypo';
-
+import React, { useState, useMemo } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Dimensions, FlatList } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ChartContainer from './ChartContainer';
 
-type ChartData = { value: number; label: string };
+type ChartData = {
+    value: number;
+    label: string;
+};
 
-interface ExerciseBreakdownProps {
+interface Props {
     exercises: string[];
-    selectedExercise: string | null;
-    toggleDropdown: (exerciseName: string) => void;
     getExerciseChartData: (exerciseName: string) => ChartData[];
 }
 
-interface ExerciseItemProps {
-    exerciseName: string;
-    isSelected: boolean;
-    onToggle: () => void;
-    chartData: ChartData[];
-}
+const ExerciseGrid: React.FC<Props> = ({
+    exercises,
+    getExerciseChartData
+}) => {
+    const [searchQuery, setSearchQuery] = useState('');
+    const router = useRouter();
 
-const ExerciseItem: React.FC<ExerciseItemProps> = ({ exerciseName, isSelected, onToggle, chartData }) => {
-    const animatedRotation = React.useRef(new Animated.Value(0)).current;
+    const filteredExercises = useMemo(() => {
+        if (!searchQuery) return exercises;
+        return exercises.filter(ex =>
+            ex.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }, [exercises, searchQuery]);
 
-    React.useEffect(() => {
-        Animated.spring(animatedRotation, {
-            toValue: isSelected ? 1 : 0,
-            friction: 6, // Controls the "bounciness" of the animation
-            tension: 60, // Controls the speed and stiffness of the spring
-            useNativeDriver: true,
-        }).start();
-    }, [isSelected]);
+    const navigateToExerciseChart = (exercise: string) => {
+        router.push({
+            pathname: '/exercise-chart',
+            params: {
+                exercise: exercise,
+                data: JSON.stringify(getExerciseChartData(exercise))
+            },
+        });
+    };
 
-    const rotateZ = animatedRotation.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '180deg'],
-    });
+    const renderExerciseCard = ({ item: exercise }: { item: string }) => {
+        const data = getExerciseChartData(exercise);
+        const latestValue = data[data.length - 1]?.value || 0;
+        const previousValue = data[data.length - 2]?.value || 0;
+        const percentChange = previousValue ? ((latestValue - previousValue) / previousValue) * 100 : 0;
 
-    return (
-        <View className="mb-3">
+        return (
             <TouchableOpacity
-                onPress={onToggle}
-                className="flex-row items-center justify-between p-3 bg-discord-accent rounded-lg"
+                onPress={() => navigateToExerciseChart(exercise)}
+                className="flex-1 m-2 p-4 bg-discord-card rounded-xl min-w-[45%]"
             >
-                <Text className="text-discord-text font-semibold text-lg">{exerciseName}</Text>
-                <Animated.View style={{ transform: [{ rotateZ }] }}>
-                    <Entypo name="chevron-down" size={24} color="white" />
-                </Animated.View>
-            </TouchableOpacity>
-            {isSelected && (
-                <View className="flex-1">
-                    <View className="px-4 py-6 space-y-6">
-                        <Text className="text-discord-text font-bold mb-4 text-center">
-                            {exerciseName} 1 Rep Max Over Time
+                <View className="flex-row justify-between items-start">
+                    <Text className="text-discord-text font-semibold flex-1" numberOfLines={1}>
+                        {exercise}
+                    </Text>
+                    <View className={`
+            ml-2 px-2 py-1 rounded-lg
+            ${percentChange >= 0 ? 'bg-green-500/20' : 'bg-discord-error/20'}
+          `}>
+                        <Text className={`
+              text-sm font-medium
+              ${percentChange >= 0 ? 'text-green-500' : 'text-discord-error'}
+            `}>
+                            {percentChange > 0 ? '+' : ''}{percentChange.toFixed(1)}%
                         </Text>
-                        <ChartContainer data={chartData} />
                     </View>
                 </View>
-            )}
+                <Text className="text-discord-muted text-sm mt-2">
+                    Last: {latestValue}kg
+                </Text>
+            </TouchableOpacity>
+        );
+    };
+
+    return (
+        <View className="flex-1 bg-discord-background">
+            {/* Search Header */}
+            <View className="p-4 border-b border-discord-card">
+                <View className="flex-row items-center bg-discord-card rounded-lg px-4 py-2">
+                    <MaterialIcons name="search" size={20} color="#72767D" />
+                    <TextInput
+                        className="flex-1 ml-2 text-discord-text"
+                        placeholder="Search exercises..."
+                        placeholderTextColor="#72767D"
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
+                    />
+                    {searchQuery.length > 0 && (
+                        <TouchableOpacity onPress={() => setSearchQuery('')}>
+                            <MaterialIcons name="close" size={20} color="#72767D" />
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </View>
+
+            {/* Exercise Grid */}
+            <FlatList
+                data={filteredExercises}
+                renderItem={renderExerciseCard}
+                keyExtractor={(item) => item}
+                numColumns={2}
+                columnWrapperStyle={{ justifyContent: 'flex-start' }}
+                className="flex-1"
+                contentContainerStyle={{ padding: 6 }}
+            />
         </View>
     );
 };
 
-const ExerciseBreakdown: React.FC<ExerciseBreakdownProps> = ({
-    exercises,
-    selectedExercise,
-    toggleDropdown,
-    getExerciseChartData,
-}) => (
-    <View className="bg-discord-dark p-4 rounded-lg">
-        <Text className="text-discord-text text-lg font-bold mb-4">Exercise Breakdown</Text>
-        {exercises.map((exerciseName, index) => (
-            <ExerciseItem
-                key={index}
-                exerciseName={exerciseName}
-                isSelected={selectedExercise === exerciseName}
-                onToggle={() => toggleDropdown(exerciseName)}
-                chartData={getExerciseChartData(exerciseName)}
-            />
-        ))}
-    </View>
-);
 
-export default ExerciseBreakdown;
-
+export default ExerciseGrid;
