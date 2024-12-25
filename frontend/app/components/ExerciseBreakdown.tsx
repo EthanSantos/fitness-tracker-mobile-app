@@ -25,11 +25,21 @@ const ExerciseGrid: React.FC<Props> = ({ exercises, getExerciseChartData }) => {
         });
     };
 
+    const getMaxValue = (data: ChartData[]) => {
+        let max = 0; 
+        for (const entry of data) {
+            if (entry.value > max) {
+                max = entry.value; 
+            }
+        }
+        return max;
+    };
+
     const renderExerciseCard = ({ item: exercise }: { item: string }) => {
         const data = getExerciseChartData(exercise);
 
         // Calculate max value
-        const maxValue = data.reduce((max, entry) => (entry.value > max ? entry.value : max), 0);
+        const maxValue = getMaxValue(data)
 
         // Calculate percent change from the last two entries
         const latestValue = data[data.length - 1]?.value || 0;
