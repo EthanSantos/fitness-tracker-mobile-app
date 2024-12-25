@@ -1,10 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Dimensions, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import ChartContainer from './ChartContainer';
 
 type ChartData = {
     value: number;
@@ -42,6 +39,7 @@ const ExerciseGrid: React.FC<Props> = ({
 
     const renderExerciseCard = ({ item: exercise }: { item: string }) => {
         const data = getExerciseChartData(exercise);
+        console.log(data)
         const latestValue = data[data.length - 1]?.value || 0;
         const previousValue = data[data.length - 2]?.value || 0;
         const percentChange = previousValue ? ((latestValue - previousValue) / previousValue) * 100 : 0;
@@ -68,7 +66,7 @@ const ExerciseGrid: React.FC<Props> = ({
                     </View>
                 </View>
                 <Text className="text-discord-muted text-sm mt-2">
-                    Last: {latestValue}kg
+                    Last: {latestValue} lbs
                 </Text>
             </TouchableOpacity>
         );
