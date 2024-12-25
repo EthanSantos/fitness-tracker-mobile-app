@@ -4,10 +4,15 @@ A personal fitness project developed over winter break to track workouts and exe
 
 ---
 
+## Features  
+- Track and log workouts with customizable exercises  
+- View progress over time through detailed records  
+- Lightweight and fast, optimized for mobile devices  
+
+---
+
 ## Tech Stack  
-
-- **Frontend**: React Native  
-- **Backend**: Fastify (Node.js)  
-
+- **Frontend**: [React Native](https://reactnative.dev/)  
+- **Backend**: [Fastify](https://www.fastify.io/) (Node.js)  
 
 **Developed by Ethan Santos**  
