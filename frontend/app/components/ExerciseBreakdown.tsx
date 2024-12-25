@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import React from 'react';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 
 type ChartData = {
@@ -13,99 +12,75 @@ interface Props {
     getExerciseChartData: (exerciseName: string) => ChartData[];
 }
 
-const ExerciseGrid: React.FC<Props> = ({
-    exercises,
-    getExerciseChartData
-}) => {
-    const [searchQuery, setSearchQuery] = useState('');
+const ExerciseGrid: React.FC<Props> = ({ exercises, getExerciseChartData }) => {
     const router = useRouter();
-
-    const filteredExercises = useMemo(() => {
-        if (!searchQuery) return exercises;
-        return exercises.filter(ex =>
-            ex.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }, [exercises, searchQuery]);
 
     const navigateToExerciseChart = (exercise: string) => {
         router.push({
             pathname: '/exercise-chart',
             params: {
                 exercise: exercise,
-                data: JSON.stringify(getExerciseChartData(exercise))
+                data: JSON.stringify(getExerciseChartData(exercise)),
             },
         });
     };
 
     const renderExerciseCard = ({ item: exercise }: { item: string }) => {
         const data = getExerciseChartData(exercise);
-        console.log(data)
+
+        // Calculate max value
+        const maxValue = data.reduce((max, entry) => (entry.value > max ? entry.value : max), 0);
+
+        // Calculate percent change from the last two entries
         const latestValue = data[data.length - 1]?.value || 0;
         const previousValue = data[data.length - 2]?.value || 0;
-        const percentChange = previousValue ? ((latestValue - previousValue) / previousValue) * 100 : 0;
+        const percentChange = previousValue
+            ? ((latestValue - previousValue) / previousValue) * 100
+            : 0;
 
         return (
             <TouchableOpacity
                 onPress={() => navigateToExerciseChart(exercise)}
-                className="flex-1 m-2 p-4 bg-discord-card rounded-xl min-w-[45%]"
+                className="flex-1 m-2 p-4 bg-discord-card rounded-lg min-w-[45%]"
             >
-                <View className="flex-row justify-between items-start">
-                    <Text className="text-discord-text font-semibold flex-1" numberOfLines={1}>
+                <View className="flex-1">
+                    <Text
+                        className="text-discord-text font-bold text-base leading-5 flex-1"
+                        numberOfLines={2}
+                    >
                         {exercise}
                     </Text>
-                    <View className={`
-            ml-2 px-2 py-1 rounded-lg
-            ${percentChange >= 0 ? 'bg-green-500/20' : 'bg-discord-error/20'}
-          `}>
-                        <Text className={`
-              text-sm font-medium
-              ${percentChange >= 0 ? 'text-green-500' : 'text-discord-error'}
-            `}>
-                            {percentChange > 0 ? '+' : ''}{percentChange.toFixed(1)}%
-                        </Text>
-                    </View>
+                    <Text className="text-discord-muted font-medium text-sm mt-2">
+                        Max: {maxValue} lbs
+                    </Text>
                 </View>
-                <Text className="text-discord-muted text-sm mt-2">
-                    Last: {latestValue} lbs
-                </Text>
+                <View className={`absolute bottom-2 right-2 px-2 py-1 rounded-lg  ${percentChange >= 0 ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
+                    <Text
+                        className={`text-xs font-semibold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'
+                            }`}
+                    >
+                        {percentChange > 0 ? '+' : ''}
+                        {percentChange.toFixed(1)}%
+                    </Text>
+                </View>
             </TouchableOpacity>
         );
     };
 
     return (
-        <View className="flex-1 bg-discord-background">
-            {/* Search Header */}
-            <View className="p-4 border-b border-discord-card">
-                <View className="flex-row items-center bg-discord-card rounded-lg px-4 py-2">
-                    <MaterialIcons name="search" size={20} color="#72767D" />
-                    <TextInput
-                        className="flex-1 ml-2 text-discord-text"
-                        placeholder="Search exercises..."
-                        placeholderTextColor="#72767D"
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                    />
-                    {searchQuery.length > 0 && (
-                        <TouchableOpacity onPress={() => setSearchQuery('')}>
-                            <MaterialIcons name="close" size={20} color="#72767D" />
-                        </TouchableOpacity>
-                    )}
-                </View>
-            </View>
-
+        <View className="flex-1 bg-discord-background px-2 py-4">
             {/* Exercise Grid */}
             <FlatList
-                data={filteredExercises}
+                data={exercises}
                 renderItem={renderExerciseCard}
                 keyExtractor={(item) => item}
                 numColumns={2}
-                columnWrapperStyle={{ justifyContent: 'flex-start' }}
+                columnWrapperStyle={{ justifyContent: 'space-between' }}
+                contentContainerStyle={{ paddingBottom: 8 }}
                 className="flex-1"
-                contentContainerStyle={{ padding: 6 }}
             />
         </View>
     );
 };
-
 
 export default ExerciseGrid;
