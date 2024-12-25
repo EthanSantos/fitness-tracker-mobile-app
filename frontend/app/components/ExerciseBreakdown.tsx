@@ -68,17 +68,22 @@ const ExerciseGrid: React.FC<Props> = ({ exercises, getExerciseChartData }) => {
     };
 
     return (
-        <View className="flex-1 bg-discord-background px-2 py-4">
+        <View className="flex-1 bg-discord-background">
             {/* Exercise Grid */}
-            <FlatList
-                data={exercises}
-                renderItem={renderExerciseCard}
-                keyExtractor={(item) => item}
-                numColumns={2}
-                columnWrapperStyle={{ justifyContent: 'space-between' }}
-                contentContainerStyle={{ paddingBottom: 8 }}
-                className="flex-1"
-            />
+            <View className="px-4">
+                <Text className="text-discord-text text-2xl font-bold mb-4">Exercise Analytics</Text>
+            </View>
+            <View className = "px-2">
+                <FlatList
+                    data={exercises}
+                    renderItem={renderExerciseCard}
+                    keyExtractor={(item) => item}
+                    numColumns={2}
+                    columnWrapperStyle={{ justifyContent: 'space-between' }}
+                    contentContainerStyle={{ paddingBottom: 8 }}
+                    className="flex-1"
+                />
+            </View>
         </View>
     );
 };

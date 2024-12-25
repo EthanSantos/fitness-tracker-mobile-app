@@ -11,11 +11,9 @@ const ExerciseChart: React.FC = () => {
     const [chartData, setChartData] = useState<ChartData[]>([]);
 
     useEffect(() => {
-        console.log('Raw data:', data);
         if (data) {
             try {
                 const parsedData = JSON.parse(data as string);
-                console.log('Parsed data:', parsedData);
                 setChartData(parsedData);
             } catch (error) {
                 console.error('Error parsing chart data:', error);
@@ -24,6 +22,7 @@ const ExerciseChart: React.FC = () => {
     }, [data]);
 
     if (!exercise || !data) {
+        // shouldn't happen, but in the case that it does
         return (
             <View className="flex-1 items-center justify-center bg-discord-background">
                 <Text className="text-discord-muted">No data available.</Text>
@@ -34,7 +33,7 @@ const ExerciseChart: React.FC = () => {
     return (
         <View className="flex-1 bg-discord-background">
             <CustomHeader
-                title={exercise as string} // Cast to string to avoid type issues
+                title={exercise as string}
                 onBack={() => router.back()}
             />
             <View className="flex-1 p-4">
