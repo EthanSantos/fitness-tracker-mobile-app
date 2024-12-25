@@ -7,7 +7,7 @@ A personal fitness project developed over winter break to track workouts and exe
 ## Features  
 - Track and log workouts with customizable exercises  
 - View progress over time through detailed records  
-- Lightweight and fast, optimized for mobile devices  
+- Data analytics for specific exercises
 
 ---
 
