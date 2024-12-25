@@ -25,21 +25,11 @@ const ExerciseGrid: React.FC<Props> = ({ exercises, getExerciseChartData }) => {
         });
     };
 
-    const getMaxValue = (data: ChartData[]) => {
-        let max = 0; 
-        for (const entry of data) {
-            if (entry.value > max) {
-                max = entry.value; 
-            }
-        }
-        return max;
-    };
-
     const renderExerciseCard = ({ item: exercise }: { item: string }) => {
         const data = getExerciseChartData(exercise);
 
         // Calculate max value
-        const maxValue = getMaxValue(data)
+        const maxValue = Math.max(...data.map(item => item.value));
 
         // Calculate percent change from the last two entries
         const latestValue = data[data.length - 1]?.value || 0;
@@ -81,7 +71,7 @@ const ExerciseGrid: React.FC<Props> = ({ exercises, getExerciseChartData }) => {
         <View className="flex-1 bg-discord-background">
             {/* Exercise Grid */}
             <View className="px-4">
-                <Text className="text-discord-text text-2xl font-bold mb-4">Exercise Analytics</Text>
+                <Text className="text-discord-text text-2xl font-bold mb-4">Exercise Breakdown</Text>
             </View>
             <View className="px-2">
                 <FlatList
