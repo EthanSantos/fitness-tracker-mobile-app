@@ -73,7 +73,7 @@ const ExerciseGrid: React.FC<Props> = ({ exercises, getExerciseChartData }) => {
             <View className="px-4">
                 <Text className="text-discord-text text-2xl font-bold mb-4">Exercise Analytics</Text>
             </View>
-            <View className = "px-2">
+            <View className="px-2">
                 <FlatList
                     data={exercises}
                     renderItem={renderExerciseCard}
@@ -82,6 +82,13 @@ const ExerciseGrid: React.FC<Props> = ({ exercises, getExerciseChartData }) => {
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     contentContainerStyle={{ paddingBottom: 8 }}
                     className="flex-1"
+                    ListEmptyComponent={
+                        <View className="flex-1 items-center justify-center">
+                            <Text className="text-discord-muted text-base">
+                                No exercises available. Start tracking your progress!
+                            </Text>
+                        </View>
+                    }
                 />
             </View>
         </View>
