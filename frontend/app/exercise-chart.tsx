@@ -4,7 +4,6 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import ChartContainer from './components/ChartContainer';
 import CustomHeader from './components/Header';
-import { parse } from 'react-native-svg';
 
 type ChartData = { value: number; label: string };
 
