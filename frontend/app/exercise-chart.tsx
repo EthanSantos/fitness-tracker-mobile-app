@@ -4,19 +4,45 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import ChartContainer from './components/ChartContainer';
 import CustomHeader from './components/Header';
+import { parse } from 'react-native-svg';
 
 type ChartData = { value: number; label: string };
+
+// Define a type for a single set
+type Set = {
+    reps: number;
+    weight: number;
+};
+
+type Exercise = {
+    name: string;
+    sets: Set[];
+};
+
+type Workout = {
+    date: string; // Format: 'MM/DD/YYYY'
+    exercises: Exercise[];
+};
 
 const ExerciseChart: React.FC = () => {
     const { exercise, data } = useLocalSearchParams();
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
 
+    function dateComparison(a: ChartData, b: ChartData) {
+        const [monthA, dayA] = a.label.split('/').map(Number);
+        const [monthB, dayB] = b.label.split('/').map(Number);
+    
+        // Compare months first, then days
+        return monthB - monthA || dayB - dayA;
+    }
+
     useEffect(() => {
         if (data) {
             try {
                 const parsedData = JSON.parse(data as string);
                 setChartData(parsedData);
+                console.log(parsedData)
             } catch (error) {
                 console.error('Error parsing chart data:', error);
             }
@@ -95,7 +121,7 @@ const ExerciseChart: React.FC = () => {
                                     <Text className="text-discord-muted font-semibold">1RM (lbs)</Text>
                                 </View>
                             </View>
-                            {chartData.map((item, index) => (
+                            {chartData.sort(dateComparison).map((item, index) => (
                                 <View key={index} className="flex-row justify-between py-2">
                                     <Text className="text-discord-text">{item.label}</Text>
                                     <Text className="text-discord-text font-bold">{item.value}</Text>
