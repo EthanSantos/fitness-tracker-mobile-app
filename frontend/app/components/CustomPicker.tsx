@@ -43,7 +43,7 @@ const CustomPicker = <T extends string>({
 
             <Pressable
                 onPress={() => setModalVisible(true)}
-                className="bg-discord-card flex-row items-center justify-between p-4 rounded-lg border border-discord-muted"
+                className="bg-discord-background flex-row items-center justify-between p-4 rounded-lg"
             >
                 <Text className={`text-lg ${selectedValue ? 'text-discord-text' : 'text-gray-500'}`}>
                     {selectedValue || `Select ${label}`}

@@ -45,7 +45,7 @@ const HeightPicker: React.FC<HeightPickerProps> = ({ feet, inches, onHeightChang
 
             <Pressable
                 onPress={() => setModalVisible(true)}
-                className="bg-discord-card p-4 rounded-lg flex-row justify-between items-center"
+                className="bg-discord-background p-4 rounded-lg flex-row justify-between items-center"
             >
                 <Text className="text-discord-text text-lg">
                     {displayValue}

@@ -114,18 +114,17 @@ const Profile: React.FC = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-
             <TouchableWithoutFeedback onPress={dismissKeyboard}>
                 <View className="flex-1 bg-discord-background">
                     <CustomHeader title="Profile" titleAlign="center" />
 
                     <ScrollView
                         contentContainerStyle={{ paddingBottom: 160, flexGrow: 1 }}
-                        className="flex-1 px-6 py-10 space-y-8"
+                        className="flex-1 p-4"
                     >
                         {/* Personal Information Section */}
-                        <View>
-                            <Text className="text-discord-text text-2xl font-semibold mb-4">
+                        <View className="bg-discord-card rounded-xl p-4 mb-6"> 
+                            <Text className="text-discord-text text-2xl font-semibold mb-6">
                                 Personal Information
                             </Text>
 
@@ -133,7 +132,7 @@ const Profile: React.FC = () => {
                                 Name
                             </Text>
                             <TextInput
-                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
+                                className="bg-discord-background text-discord-text text-lg p-4 rounded-lg mb-6"
                                 placeholder="Enter your name"
                                 placeholderTextColor="#72767D"
                                 value={name}
@@ -144,7 +143,7 @@ const Profile: React.FC = () => {
                                 Age
                             </Text>
                             <TextInput
-                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
+                                className="bg-discord-background text-discord-text text-lg p-4 rounded-lg mb-6"
                                 placeholder="Enter your age"
                                 placeholderTextColor="#72767D"
                                 keyboardType="number-pad"
@@ -160,8 +159,8 @@ const Profile: React.FC = () => {
                         </View>
 
                         {/* Physical Details Section */}
-                        <View>
-                            <Text className="text-discord-text text-2xl font-semibold mb-4">
+                        <View className="bg-discord-card rounded-xl p-6 mb-6">
+                            <Text className="text-discord-text text-2xl font-semibold mb-6">
                                 Physical Details
                             </Text>
 
@@ -169,7 +168,7 @@ const Profile: React.FC = () => {
                                 Weight (lbs)
                             </Text>
                             <TextInput
-                                className="bg-discord-card text-discord-text text-lg p-4 rounded-lg mb-4"
+                                className="bg-discord-background text-discord-text text-lg p-4 rounded-lg mb-6"
                                 placeholder="Enter your weight"
                                 placeholderTextColor="#72767D"
                                 keyboardType="decimal-pad"
@@ -185,8 +184,8 @@ const Profile: React.FC = () => {
                         </View>
 
                         {/* Preferences Section */}
-                        <View>
-                            <Text className="text-discord-text text-2xl font-semibold mb-4">
+                        <View className="bg-discord-card rounded-xl p-6">
+                            <Text className="text-discord-text text-2xl font-semibold mb-6">
                                 Preferences
                             </Text>
 
@@ -214,9 +213,9 @@ const Profile: React.FC = () => {
                     </ScrollView>
 
                     {/* Save Button */}
-                    <View className="absolute bottom-0 left-0 right-0 bg-discord-background p-4">
+                    <View className="absolute bottom-0 left-0 right-0 bg-discord-background p-4 border-t border-discord-card">
                         <TouchableOpacity
-                            className="bg-discord-accent px-8 py-4 rounded-xl active:opacity-80 shadow-lg"
+                            className="bg-discord-accent px-8 py-4 rounded-xl active:opacity-80"
                             onPress={handleSave}
                         >
                             <Text className="text-xl font-semibold text-white text-center">Save</Text>
