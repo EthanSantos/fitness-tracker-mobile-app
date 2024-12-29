@@ -13,7 +13,7 @@ A personal fitness project developed over winter break to track workouts and exe
 
 ## Tech Stack  
 - **Frontend**: [React Native](https://reactnative.dev/)  
-    - Styling: [`nativewind`](https://www.nativewind.dev/)  
+    - Styling: [NativeWind](https://www.nativewind.dev/)  
 - **Backend**: [Fastify](https://www.fastify.io/) (Node.js)  
 
 **Developed by Ethan Santos**  
