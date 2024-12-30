@@ -1,17 +1,5 @@
-type Set = {
-    reps: number;
-    weight: number;
-};
+import { Workout } from "../types";
 
-type Exercise = {
-    name: string;
-    sets: Set[];
-};
-
-type Workout = {
-    date: string; // Format: 'MM/DD/YYYY'
-    exercises: Exercise[];
-};
 
 export const workoutData: Workout[] = [
     // Week 1

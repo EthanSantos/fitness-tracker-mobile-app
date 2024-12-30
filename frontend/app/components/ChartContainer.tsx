@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
-type ChartData = { value: number; label: string };
+import { ChartData } from '../types';
 
 interface ChartContainerProps {
     title?: string;
