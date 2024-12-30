@@ -5,23 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ChartContainer from './components/ChartContainer';
 import CustomHeader from './components/Header';
 
-type ChartData = { value: number; label: string };
-
-// Define a type for a single set
-type Set = {
-    reps: number;
-    weight: number;
-};
-
-type Exercise = {
-    name: string;
-    sets: Set[];
-};
-
-type Workout = {
-    date: string; // Format: 'MM/DD/YYYY'
-    exercises: Exercise[];
-};
+import { ChartData } from './types';
 
 const ExerciseChart: React.FC = () => {
     const { exercise, data } = useLocalSearchParams();
