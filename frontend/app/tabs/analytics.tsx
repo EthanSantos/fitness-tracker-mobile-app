@@ -10,26 +10,7 @@ import TimeframeSelector from '../components/TimeframeSelector';
 
 import { workoutData } from '../components/MockWorkoutData';
 
-// Define a type for a single set
-type Set = {
-    reps: number;
-    weight: number;
-};
-
-// Define a type for a single exercise
-type Exercise = {
-    name: string;
-    sets: Set[];
-};
-
-// Define a type for a single workout
-type Workout = {
-    date: string; // Format: 'MM/DD/YYYY'
-    exercises: Exercise[];
-};
-
-type ChartData = { value: number; label: string };
-
+import { Workout, ChartData } from '../types';
 
 const Analytics: React.FC = () => {
     const [selectedTimeframe, setSelectedTimeframe] = useState<'day' | 'week'>('day');

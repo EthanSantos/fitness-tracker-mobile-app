@@ -1,12 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
-
-type ChartData = {
-    value: number;
-    label: string;
-};
-
+import { ChartData } from '../types';
 interface Props {
     exercises: string[];
     getExerciseChartData: (exerciseName: string) => ChartData[];
