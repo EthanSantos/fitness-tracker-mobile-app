@@ -9,6 +9,7 @@ import {
     Pressable,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface HeightPickerProps {
     feet: number;
@@ -38,22 +39,25 @@ const HeightPicker: React.FC<HeightPickerProps> = ({ feet, inches, onHeightChang
     const displayValue = `${feet}' ${inches}"`;
 
     return (
-        <View>
-            <Text className="text-discord-text text-lg font-semibold mb-2">
-                Height
-            </Text>
+        <View className="mb-6">
 
-            <Pressable
-                onPress={() => setModalVisible(true)}
-                className="bg-discord-background p-4 rounded-lg flex-row justify-between items-center"
-            >
-                <Text className="text-discord-text text-lg">
-                    {displayValue}
-                </Text>
-                <Text className="text-discord-accent text-lg">
-                    Edit
-                </Text>
-            </Pressable>
+            <View className="flex-row border border-discord-card rounded-xl overflow-hidden bg-discord-card/50" style={{ height: 42 }}>
+                <View className="bg-discord-accent/10 h-full flex items-center justify-center px-3">
+                    <MaterialCommunityIcons name="human-male-height" size={18} color="#5865F2" />
+                </View>
+                
+                <Pressable
+                    onPress={() => setModalVisible(true)}
+                    className="flex-1 py-2 px-2 flex-row justify-between items-center"
+                >
+                    <Text className="text-discord-text text-base">
+                        {displayValue}
+                    </Text>
+                    <View className="pr-2">
+                        <MaterialCommunityIcons name="chevron-down" size={18} color="#5865F2" />
+                    </View>
+                </Pressable>
+            </View>
 
             <Modal
                 animationType="fade"

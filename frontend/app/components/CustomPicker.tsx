@@ -7,15 +7,32 @@ import {
     TouchableOpacity,
     Platform,
     Pressable,
+    ViewStyle,
+    TextStyle,
+    StyleProp,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 type CustomPickerProps<T extends string> = {
     label: string;
     selectedValue: T;
     onValueChange: (value: T) => void;
     options: T[];
+    // styling props
+    containerStyle?: StyleProp<ViewStyle>;
+    labelStyle?: StyleProp<TextStyle>;
+    pickerStyle?: StyleProp<ViewStyle>;
+    textStyle?: StyleProp<TextStyle>;
+    // Icon props
+    iconName?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+    iconColor?: string;
+    iconSize?: number;
+    // Class names for tailwind
+    containerClassName?: string;
+    pickerClassName?: string;
+    labelClassName?: string;
+    iconContainerClassName?: string;
 };
 
 const CustomPicker = <T extends string>({
@@ -23,6 +40,17 @@ const CustomPicker = <T extends string>({
     selectedValue,
     onValueChange,
     options,
+    containerStyle,
+    labelStyle,
+    pickerStyle,
+    textStyle,
+    iconName,
+    iconColor = "#5865F2",
+    iconSize = 20,
+    containerClassName = "",
+    pickerClassName = "",
+    labelClassName = "",
+    iconContainerClassName = "",
 }: CustomPickerProps<T>) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [tempValue, setTempValue] = useState(selectedValue);
@@ -38,18 +66,34 @@ const CustomPicker = <T extends string>({
     };
 
     return (
-        <View className="mb-6">
-            <Text className="text-discord-text text-lg font-semibold mb-2">{label}</Text>
-
-            <Pressable
-                onPress={() => setModalVisible(true)}
-                className="bg-discord-background flex-row items-center justify-between p-4 rounded-lg"
+        <View style={containerStyle} className={`mb-6 ${containerClassName}`}>
+            <Text 
+                style={labelStyle} 
+                className={`text-discord-text text-base font-medium mb-2 ${labelClassName}`}
             >
-                <Text className={`text-lg ${selectedValue ? 'text-discord-text' : 'text-gray-500'}`}>
-                    {selectedValue || `Select ${label}`}
-                </Text>
-                <MaterialIcons name="arrow-drop-down" size={24} color="#DCDDDE" />
-            </Pressable>
+                {label}
+            </Text>
+
+            <View className={`flex-row border border-discord-card rounded-xl overflow-hidden bg-discord-card/50 ${pickerClassName}`} style={[{ height: 42 }, pickerStyle]}>
+                {iconName && (
+                    <View className={`bg-discord-accent/10 h-full flex items-center justify-center px-3 ${iconContainerClassName}`}>
+                        <MaterialCommunityIcons name={iconName} size={18} color={iconColor} />
+                    </View>
+                )}
+                
+                <Pressable
+                    onPress={() => setModalVisible(true)}
+                    className="flex-1 py-2 px-2 flex-row justify-between items-center"
+                >
+                    <Text 
+                        style={textStyle}
+                        className={`text-base ${selectedValue ? 'text-discord-text' : 'text-gray-500'}`}
+                    >
+                        {selectedValue || `Select ${label}`}
+                    </Text>
+                    <MaterialIcons name="arrow-drop-down" size={22} color="#DCDDDE" />
+                </Pressable>
+            </View>
 
             <Modal
                 animationType="fade"
