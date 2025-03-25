@@ -141,7 +141,7 @@ const Profile: React.FC = () => {
                             setFitnessGoal(originalData.fitnessGoal);
                             setHasChanges(false);
                             
-                            showToast("info", "Discarded Changes", "Your changes have been discarded");
+                            showToast("info", "Discarded CHanges", "Your changes have been discarded");
                         }
                     },
                     style: "destructive"
@@ -193,6 +193,49 @@ const Profile: React.FC = () => {
         }
         
         return Math.round((filled / total) * 100);
+    };
+
+    // Handle tab switching with confirmation when there are unsaved changes
+    const handleTabSwitch = (newTab: 'personal' | 'physical' | 'goals') => {
+        if (hasChanges) {
+            Alert.alert(
+                "Unsaved Changes",
+                "You have unsaved changes. What would you like to do?",
+                [
+                    {
+                        text: "Stay Here",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Discard Changes",
+                        onPress: () => {
+                            // Reset form to original data and switch tab
+                            if (originalData) {
+                                setName(originalData.name);
+                                setAge(originalData.age);
+                                setWeight(originalData.weight);
+                                setHeightValue(originalData.height);
+                                setGender(originalData.gender);
+                                setActivityLevel(originalData.activityLevel);
+                                setFitnessGoal(originalData.fitnessGoal);
+                                setHasChanges(false);
+                            }
+                            setActiveTab(newTab);
+                        },
+                        style: "destructive"
+                    },
+                    {
+                        text: "Save Changes",
+                        onPress: async () => {
+                            await handleSave();
+                            setActiveTab(newTab);
+                        }
+                    }
+                ]
+            );
+        } else {
+            setActiveTab(newTab);
+        }
     };
 
     // will run whenever the screen comes into focus (including the first time)
@@ -261,7 +304,7 @@ const Profile: React.FC = () => {
                     <View className="flex-row mt-4 mx-4 mb-2 bg-discord-card/50 rounded-xl overflow-hidden">
                         <TouchableOpacity 
                             className={`flex-1 py-3 px-2 items-center ${activeTab === 'personal' ? 'bg-discord-accent/10' : ''}`}
-                            onPress={() => setActiveTab('personal')}
+                            onPress={() => handleTabSwitch('personal')}
                         >
                             <View className="flex-row items-center">
                                 <MaterialCommunityIcons 
@@ -280,7 +323,7 @@ const Profile: React.FC = () => {
                         
                         <TouchableOpacity 
                             className={`flex-1 py-3 px-2 items-center ${activeTab === 'physical' ? 'bg-discord-accent/10' : ''}`}
-                            onPress={() => setActiveTab('physical')}
+                            onPress={() => handleTabSwitch('physical')}
                         >
                             <View className="flex-row items-center">
                                 <MaterialCommunityIcons 
@@ -299,7 +342,7 @@ const Profile: React.FC = () => {
                         
                         <TouchableOpacity 
                             className={`flex-1 py-3 px-2 items-center ${activeTab === 'goals' ? 'bg-discord-accent/10' : ''}`}
-                            onPress={() => setActiveTab('goals')}
+                            onPress={() => handleTabSwitch('goals')}
                         >
                             <View className="flex-row items-center">
                                 <MaterialCommunityIcons 
@@ -372,7 +415,7 @@ const Profile: React.FC = () => {
 
                                 <TouchableOpacity 
                                     className="items-center py-3 bg-discord-accent/10 rounded-xl mt-4 flex-row justify-center"
-                                    onPress={() => setActiveTab('physical')}
+                                    onPress={() => handleTabSwitch('physical')}
                                 >
                                     <Text className="text-discord-accent font-semibold">Next: Physical Details</Text>
                                     <MaterialCommunityIcons name="arrow-right" size={20} color="#5865F2" style={{ marginLeft: 4 }} />
@@ -415,7 +458,7 @@ const Profile: React.FC = () => {
                                 <View className="flex-row justify-between mt-4">
                                     <TouchableOpacity 
                                         className="py-3 bg-discord-card rounded-xl px-5 flex-row items-center"
-                                        onPress={() => setActiveTab('personal')}
+                                        onPress={() => handleTabSwitch('personal')}
                                     >
                                         <MaterialCommunityIcons name="arrow-left" size={20} color="#72767D" style={{ marginRight: 4 }} />
                                         <Text className="text-discord-text font-medium">Back</Text>
@@ -423,7 +466,7 @@ const Profile: React.FC = () => {
                                     
                                     <TouchableOpacity 
                                         className="py-3 bg-discord-accent/10 rounded-xl px-5 flex-row items-center"
-                                        onPress={() => setActiveTab('goals')}
+                                        onPress={() => handleTabSwitch('goals')}
                                     >
                                         <Text className="text-discord-accent font-medium">Next: Goals</Text>
                                         <MaterialCommunityIcons name="arrow-right" size={20} color="#5865F2" style={{ marginLeft: 4 }} />
@@ -474,7 +517,7 @@ const Profile: React.FC = () => {
                                 <View className="flex-row justify-start mt-4">
                                     <TouchableOpacity 
                                         className="py-3 bg-discord-card rounded-xl px-5 flex-row items-center"
-                                        onPress={() => setActiveTab('physical')}
+                                        onPress={() => handleTabSwitch('physical')}
                                     >
                                         <MaterialCommunityIcons name="arrow-left" size={20} color="#72767D" style={{ marginRight: 4 }} />
                                         <Text className="text-discord-text font-medium">Back</Text>
