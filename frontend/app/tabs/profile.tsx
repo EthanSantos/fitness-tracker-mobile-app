@@ -17,7 +17,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { showToast } from '../components/ShowToast';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import CustomHeader from '../components/Header';
 import CustomPicker from '../components/CustomPicker';
 import HeightPicker from '../components/HeightPicker';
 
