@@ -42,7 +42,19 @@ const Workouts: React.FC = () => {
             setIsLoading(true);
             const savedWorkouts = await AsyncStorage.getItem('workouts');
             if (savedWorkouts) {
-                setWorkouts(JSON.parse(savedWorkouts));
+                const parsedWorkouts = JSON.parse(savedWorkouts);
+
+                // Sort workouts by ID (which is Date.now().toString()) in descending order
+                const sortedWorkouts = parsedWorkouts.sort((a: Workout, b: Workout) => {
+                    // Convert string IDs to numbers for comparison
+                    const idA = parseInt(a.id);
+                    const idB = parseInt(b.id);
+
+                    // Sort descending (newest first)
+                    return idB - idA;
+                });
+
+                setWorkouts(sortedWorkouts);
             }
         } catch (error) {
             console.error('Error loading workouts:', error);
