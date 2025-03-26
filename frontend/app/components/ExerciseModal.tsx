@@ -44,6 +44,27 @@ type ExerciseModalProps = {
 
 const { height } = Dimensions.get('window');
 
+// Function to calculate one rep max (same as in SetFrame)
+const calculateOneRepMax = (weight: number, reps: number): number => {
+    if (reps <= 0) return weight;
+    if (reps === 1) return weight;
+
+    // Epley formula: weight * (1 + 0.0333 * reps)
+    const epley = weight * (1 + 0.0333 * reps);
+    
+    // Brzycki formula: weight * 36 / (37 - reps)
+    const brzycki = weight * 36 / (37 - reps);
+    
+    // Lander formula: 100 * weight / (101.3 - 2.67123 * reps)
+    const lander = 100 * weight / (101.3 - 2.67123 * reps);
+    
+    // Average the formulas for better accuracy
+    const average = (epley + brzycki + lander) / 3;
+    
+    // Round to nearest 0.5
+    return Math.round(average * 2) / 2;
+};
+
 const ExerciseModal: React.FC<ExerciseModalProps> = ({
     modalVisible,
     setModalVisible,
@@ -64,6 +85,24 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [setToDelete, setSetToDelete] = useState<number | null>(null);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+    // Find the best set index
+    const findBestSetIndex = useCallback(() => {
+        if (!selectedExercise || selectedExercise.sets.length === 0) return -1;
+
+        let bestIndex = 0;
+        let bestOneRM = 0;
+
+        selectedExercise.sets.forEach((set, index) => {
+            const oneRM = calculateOneRepMax(set.weight, set.reps);
+            if (oneRM > bestOneRM) {
+                bestOneRM = oneRM;
+                bestIndex = index;
+            }
+        });
+
+        return bestIndex;
+    }, [selectedExercise]);
 
     // Close modal with animation
     const closeModal = useCallback(() => {
@@ -193,6 +232,11 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
         }
     }, [selectedExercise, setToDelete, exercises, setExercises, setSelectedExercise]);
 
+    // Cancel delete
+    const cancelDelete = useCallback(() => {
+        setSetToDelete(null);
+    }, []);
+
     // Handle add set with validation
     const handleEnhancedAddSet = useCallback(async () => {
         if (!reps.trim() || !weight.trim()) {
@@ -220,6 +264,9 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
             repsInputRef.current.focus();
         }
     }, []);
+
+    // Get the best set index
+    const bestSetIndex = findBestSetIndex();
 
     return (
         <Modal
@@ -294,13 +341,12 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                                             <FlatList
                                                 data={selectedExercise.sets}
                                                 renderItem={({ item, index }) => (
-                                                    <View>
-                                                        <SetFrame
-                                                            item={item}
-                                                            index={index}
-                                                            onDelete={handleDeleteSet}
-                                                        />
-                                                    </View>
+                                                    <SetFrame
+                                                        item={item}
+                                                        index={index}
+                                                        onDelete={handleDeleteSet}
+                                                        isBestSet={index === bestSetIndex}
+                                                    />
                                                 )}
                                                 keyExtractor={(_, index) => `set-${index}`}
                                                 ListEmptyComponent={
@@ -400,7 +446,7 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                     </KeyboardAvoidingView>
                 </Animated.View>
 
-                {/* Delete Set Confirmation Modal */}
+                {/* Custom Delete Set Confirmation Dialog */}
                 {setToDelete !== null && selectedExercise && (
                     <View style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }} className="flex items-center justify-center">
                         <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }} className="absolute inset-0" />
@@ -414,7 +460,7 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
                             <View className="flex-row justify-between">
                                 <TouchableOpacity
                                     className="flex-1 bg-gray-700 py-3 px-4 rounded-lg mr-3"
-                                    onPress={() => setSetToDelete(null)}
+                                    onPress={cancelDelete}
                                 >
                                     <Text className="text-white text-center font-medium">Cancel</Text>
                                 </TouchableOpacity>
