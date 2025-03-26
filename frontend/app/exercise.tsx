@@ -71,7 +71,7 @@ const ExerciseLog: React.FC = () => {
 
     useEffect(() => {
         saveExercises();
-        postExercises();
+        //postExercises();
     }, [exercisesByWorkout]);
 
     const saveExercises = async (): Promise<void> => {
@@ -201,6 +201,7 @@ const ExerciseLog: React.FC = () => {
                         setExerciseName={setExerciseName}
                         handleAddExercise={handleAddExercise}
                         handleClearExercises={handleClearExercises}
+                        exerciseCount={(exercisesByWorkout[id] || []).length}
                     />
                 </View>
 
