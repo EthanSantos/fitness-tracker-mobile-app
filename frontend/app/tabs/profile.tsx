@@ -123,7 +123,7 @@ const Profile: React.FC = () => {
                             setFitnessGoal(originalData.fitnessGoal);
                             setHasChanges(false);
                             
-                            showToast("info", "Discarded CHanges", "Your changes have been discarded");
+                            showToast("info", "Discarded Changes", "Your changes have been discarded");
                         }
                     },
                     style: "destructive"
