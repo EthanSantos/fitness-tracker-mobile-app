@@ -15,14 +15,7 @@ import ExerciseList from "./components/ExerciseList";
 import ExerciseInput from "./components/ExerciseInput";
 import CustomHeader from './components/Header';
 
-
-// Define the Exercise data structure
-type Exercise = {
-    id: string;
-    name: string;
-    sets: { reps: number; weight: number }[];
-    date: string;
-};
+import { Exercise } from './types';
 
 type ExercisesByWorkout = {
     [workoutId: string]: Exercise[];

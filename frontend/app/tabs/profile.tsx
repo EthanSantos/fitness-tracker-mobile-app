@@ -20,24 +20,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CustomPicker from '../components/CustomPicker';
 import HeightPicker from '../components/HeightPicker';
 
-type GenderOptions = 'Male' | 'Female' | '';
-type ActivityLevelOptions = 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active' | '';
-type FitnessGoalOptions = 'Lose Weight' | 'Build Muscle' | 'Maintain Weight' | 'Increase Stamina' | 'Improve Flexibility' | 'Enhance Endurance' | '';
-
-type HeightValue = {
-    feet: number;
-    inches: number;
-}
-
-type ProfileData = {
-    name: string;
-    age: string;
-    weight: string;
-    height: HeightValue;
-    gender: GenderOptions;
-    activityLevel: ActivityLevelOptions;
-    fitnessGoal: FitnessGoalOptions;
-}
+import { GenderOptions, ActivityLevelOptions, FitnessGoalOptions, HeightValue, ProfileData } from '../types';
 
 const Profile: React.FC = () => {
     const [name, setName] = useState<string>('');
