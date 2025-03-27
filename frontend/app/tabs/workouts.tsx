@@ -159,7 +159,7 @@ const Workouts: React.FC = () => {
 
             <View className="p-4 flex-1">
                 {/* Add Workout Section */}
-                <InputWorkout workoutName={workoutName} setWorkoutName={setWorkoutName} handleAddWorkout={handleAddWorkout}/>
+                <InputWorkout workoutName={workoutName} setWorkoutName={setWorkoutName} handleAddWorkout={handleAddWorkout} />
 
                 {/* Workouts List */}
                 {isLoading ? (
@@ -168,7 +168,9 @@ const Workouts: React.FC = () => {
                     </View>
                 ) : (
                     <FlatList
-                        data={workouts}
+                        data={workouts.sort((a, b) => {
+                            return parseInt(b.id) - parseInt(a.id)
+                        })}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) =>
                             <WorkoutCard
