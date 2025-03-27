@@ -12,12 +12,13 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../components/Header';
+import CustomHeader from '../components/ui/Header';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import { showToast } from '../components/ShowToast';
-import WorkoutCard from '../components/WorkoutCard';
-import EmptyWorkoutList from '../components/EmptyWorkoutList';
+import { showToast } from '../components/ui/ShowToast';
+import WorkoutCard from '../components/workout/WorkoutCard';
+import EmptyWorkoutList from '../components/workout/EmptyWorkoutList';
+import InputWorkout from '../components/workout/InputWorkout'
 
 type Workout = {
     id: string;
@@ -158,37 +159,7 @@ const Workouts: React.FC = () => {
 
             <View className="p-4 flex-1">
                 {/* Add Workout Section */}
-                <View className="bg-discord-card rounded-xl p-4 mb-6">
-                    <View className="flex-row items-center mb-4">
-                        <MaterialCommunityIcons
-                            name="playlist-plus"
-                            size={24}
-                            color="#5865F2"
-                            style={{ marginRight: 8 }}
-                        />
-                        <Text className="text-discord-text text-xl font-bold">
-                            Add Workout
-                        </Text>
-                    </View>
-
-                    <TextInput
-                        className="bg-discord-background text-discord-text text-lg px-4 py-3 rounded-lg mb-3"
-                        placeholder="What's your workout plan?"
-                        placeholderTextColor="#72767D"
-                        value={workoutName}
-                        onChangeText={setWorkoutName}
-                        onSubmitEditing={handleAddWorkout}
-                    />
-
-                    <TouchableOpacity
-                        className="bg-discord-accent py-3 rounded-lg items-center justify-center flex-row space-x-2"
-                        onPress={handleAddWorkout}
-                    >
-                        <Text className="text-white font-bold text-lg">
-                            Create Workout
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                <InputWorkout workoutName={workoutName} setWorkoutName={setWorkoutName} handleAddWorkout={handleAddWorkout}/>
 
                 {/* Workouts List */}
                 {isLoading ? (

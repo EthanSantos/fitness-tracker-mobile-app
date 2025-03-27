@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { View, TextInput, FlatList, TouchableOpacity, Text, Keyboard } from "react-native";
-import "../../global.css";
 import { exerciseSuggestions } from './ExerciseSuggestions';
 
 type Suggestion = string;

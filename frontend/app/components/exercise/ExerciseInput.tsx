@@ -9,8 +9,6 @@ import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 import ExerciseAutocomplete from './ExerciseAutocomplete';
 
-import "../../global.css";
-
 type ExerciseInputProps = {
     exerciseName: string;
     setExerciseName: (name: string) => void;

@@ -8,12 +8,12 @@ import {
 import axios from 'axios';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { showToast } from './components/ShowToast';
+import { showToast } from './components/ui/ShowToast';
 
-import ExerciseModal from './components/ExerciseModal';
-import ExerciseList from "./components/ExerciseList";
-import ExerciseInput from "./components/ExerciseInput";
-import CustomHeader from './components/Header';
+import ExerciseModal from './components/exercise/ExerciseModal';
+import ExerciseList from "./components/exercise/ExerciseList";
+import ExerciseInput from "./components/exercise/ExerciseInput";
+import CustomHeader from './components/ui/Header';
 
 import { Exercise } from './types';
 

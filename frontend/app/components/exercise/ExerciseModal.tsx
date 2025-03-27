@@ -16,10 +16,8 @@ import {
     PanResponder,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { showToast } from './ShowToast';
+import { showToast } from '../ui/ShowToast';
 import SetFrame from './SetFrame';
-
-import "../../global.css";
 
 type Exercise = {
     id: string;

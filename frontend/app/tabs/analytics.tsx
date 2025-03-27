@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import CustomHeader from '../components/Header';
+import CustomHeader from '../components/ui/Header';
 import { View, FlatList } from 'react-native';
 
-import ChartContainer from '../components/ChartContainer';
-import ExerciseBreakdown from '../components/ExerciseBreakdown';
-import StatsCard from '../components/StatsCard';
-import StrongestLifts from '../components/StrongestLifts';
-import TimeframeSelector from '../components/TimeframeSelector';
+import ChartContainer from '../components/ui/ChartContainer';
+import ExerciseBreakdown from '../components/analytics/ExerciseBreakdown';
+import StatsCard from '../components/analytics/StatsCard';
+import StrongestLifts from '../components/analytics/StrongestLifts';
+import TimeframeSelector from '../components/analytics/TimeframeSelector';
 
-import { workoutData } from '../components/MockWorkoutData';
+import { workoutData } from '../components/analytics/MockWorkoutData';
 
 import { Workout, ChartData } from '../types';
 

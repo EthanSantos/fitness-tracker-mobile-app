@@ -14,11 +14,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import { showToast } from '../components/ShowToast';
+import { showToast } from '../components/ui/ShowToast';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import CustomPicker from '../components/CustomPicker';
-import HeightPicker from '../components/HeightPicker';
+import CustomPicker from '../components/ui/CustomPicker';
+import HeightPicker from '../components/profile/HeightPicker';
 
 import { GenderOptions, ActivityLevelOptions, FitnessGoalOptions, HeightValue, ProfileData } from '../types';
 

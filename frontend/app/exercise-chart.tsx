@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import ChartContainer from './components/ChartContainer';
-import CustomHeader from './components/Header';
+import ChartContainer from './components/ui/ChartContainer';
+import CustomHeader from './components/ui/Header';
 
 import { ChartData } from './types';
 
