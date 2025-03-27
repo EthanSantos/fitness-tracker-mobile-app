@@ -9,13 +9,22 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      }
     },
     "production": {
       "autoIncrement": true
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "ethanangelo61@gmail.com",
+        "ascAppId": "6743826190",
+        "appleTeamId": "Z88FZD52X3"
+      }
+    }
   }
 }

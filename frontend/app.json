@@ -10,7 +10,8 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ethansantos.FitnessApp"
+      "bundleIdentifier": "com.ethansantos.FitnessApp",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
