@@ -27,7 +27,6 @@ const Profile: React.FC = () => {
     
     // Destructure values from the hook
     const {
-        // State
         name, setName,
         age, setAge,
         weight, setWeight,
@@ -58,8 +57,6 @@ const Profile: React.FC = () => {
     useFocusEffect(
         useCallback(() => {
             loadProfile();
-            // Empty dependency array because we want this to run only when the screen comes into focus
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
     );
 
