@@ -12,13 +12,10 @@ import { workoutData } from '../components/analytics/MockWorkoutData';
 
 import { Workout, ChartData } from '../types';
 
+import { calculateOneRepMax } from '../utils/fitness';
+
 const Analytics: React.FC = () => {
     const [selectedTimeframe, setSelectedTimeframe] = useState<'day' | 'week'>('day');
-
-    // Calculate the one-rep max using the Epley formula: weight * (1 + reps / 30)
-    const calculateOneRepMax = (weight: number, reps: number): number => {
-        return Math.round(weight * (1 + reps / 30));
-    };
 
     function parseDate(dateString: string): Date {
         // parse data in the correct date format

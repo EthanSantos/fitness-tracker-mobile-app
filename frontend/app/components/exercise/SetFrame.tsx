@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, Text, Animated, TouchableOpacity } from 'react-native';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { Set } from '@/app/types';
-
+import { calculateOneRepMax } from '@/app/utils/fitness';
 
 type SetFrameProps = {
     item: Set;
@@ -11,26 +11,6 @@ type SetFrameProps = {
     isBestSet?: boolean;
 };
 
-// Function to calculate one rep max using multiple formulas and average them
-const calculateOneRepMax = (weight: number, reps: number): number => {
-    if (reps <= 0) return weight;
-    if (reps === 1) return weight;
-
-    // Epley formula: weight * (1 + 0.0333 * reps)
-    const epley = weight * (1 + 0.0333 * reps);
-
-    // Brzycki formula: weight * 36 / (37 - reps)
-    const brzycki = weight * 36 / (37 - reps);
-
-    // Lander formula: 100 * weight / (101.3 - 2.67123 * reps)
-    const lander = 100 * weight / (101.3 - 2.67123 * reps);
-
-    // Average the formulas for better accuracy
-    const average = (epley + brzycki + lander) / 3;
-
-    // Round to nearest 0.5
-    return Math.round(average * 2) / 2;
-};
 
 const SetFrame: React.FC<SetFrameProps> = ({ item, index, onDelete, isBestSet = false }) => {
     const [isPressed, setIsPressed] = useState(false);

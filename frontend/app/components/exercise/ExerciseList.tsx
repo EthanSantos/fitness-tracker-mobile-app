@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Set } from '@/app/types';
+import { calculateOneRepMax } from '@/app/utils/fitness';
 
 type Exercise = {
     id: string;
@@ -14,27 +15,6 @@ type ExerciseListProps = {
     exercises: Exercise[];
     handleExerciseSelect: (item: Exercise) => void;
     handleDeleteExercise: (id: string, name: string) => void;
-};
-
-// Function to calculate one rep max for determining best set
-const calculateOneRepMax = (weight: number, reps: number): number => {
-    if (reps <= 0) return weight;
-    if (reps === 1) return weight;
-
-    // Epley formula: weight * (1 + 0.0333 * reps)
-    const epley = weight * (1 + 0.0333 * reps);
-    
-    // Brzycki formula: weight * 36 / (37 - reps)
-    const brzycki = weight * 36 / (37 - reps);
-    
-    // Lander formula: 100 * weight / (101.3 - 2.67123 * reps)
-    const lander = 100 * weight / (101.3 - 2.67123 * reps);
-    
-    // Average the formulas for better accuracy
-    const average = (epley + brzycki + lander) / 3;
-    
-    // Round to nearest 0.5
-    return Math.round(average * 2) / 2;
 };
 
 const ExerciseList: React.FC<ExerciseListProps> = ({
