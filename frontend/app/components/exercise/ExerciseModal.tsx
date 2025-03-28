@@ -18,14 +18,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { showToast } from '../ui/ShowToast';
 import SetFrame from './SetFrame';
-import { Set } from '@/app/types';
-
-type Exercise = {
-    id: string;
-    name: string;
-    sets: Set[];
-    date: string;
-};
+import { Exercise } from '@/app/types';
 
 type ExerciseModalProps = {
     modalVisible: boolean;
