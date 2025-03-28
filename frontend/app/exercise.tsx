@@ -99,6 +99,15 @@ const ExerciseLog: React.FC = () => {
         Keyboard.dismiss();
     };
 
+    const getCurrentTime = () => {
+        const now = new Date();
+        return now.toLocaleTimeString('en-US', { 
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true      // For AM/PM format
+        }).toLowerCase();   // Convert "PM" to "pm"
+      };
+
     const handleAddSet = (): void => {
         if (!reps.trim() || !weight.trim()) {
             Alert.alert('Error', 'Please fill out both reps and weight.');
@@ -118,7 +127,7 @@ const ExerciseLog: React.FC = () => {
                 ...selectedExercise,
                 sets: [
                     ...selectedExercise.sets,
-                    { reps: parsedReps, weight: parsedWeight },
+                    { reps: parsedReps, weight: parsedWeight, date: getCurrentTime() },
                 ],
             };
 

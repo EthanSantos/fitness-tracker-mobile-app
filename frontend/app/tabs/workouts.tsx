@@ -19,6 +19,7 @@ import { showToast } from '../components/ui/ShowToast';
 import WorkoutCard from '../components/workout/WorkoutCard';
 import EmptyWorkoutList from '../components/workout/EmptyWorkoutList';
 import InputWorkout from '../components/workout/InputWorkout'
+import { Set } from '../types';
 
 type Workout = {
     id: string;
@@ -27,7 +28,7 @@ type Workout = {
 type Exercise = {
     id: string;
     name: string;
-    sets: { reps: number; weight: number }[];
+    sets: Set[];
     date: string;
 }
 

@@ -1,9 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, Animated, TouchableOpacity } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { Set } from '@/app/types';
+
 
 type SetFrameProps = {
-    item: { reps: number; weight: number };
+    item: Set;
     index: number;
     onDelete: (index: number) => void;
     isBestSet?: boolean;
@@ -16,16 +18,16 @@ const calculateOneRepMax = (weight: number, reps: number): number => {
 
     // Epley formula: weight * (1 + 0.0333 * reps)
     const epley = weight * (1 + 0.0333 * reps);
-    
+
     // Brzycki formula: weight * 36 / (37 - reps)
     const brzycki = weight * 36 / (37 - reps);
-    
+
     // Lander formula: 100 * weight / (101.3 - 2.67123 * reps)
     const lander = 100 * weight / (101.3 - 2.67123 * reps);
-    
+
     // Average the formulas for better accuracy
     const average = (epley + brzycki + lander) / 3;
-    
+
     // Round to nearest 0.5
     return Math.round(average * 2) / 2;
 };
@@ -33,7 +35,7 @@ const calculateOneRepMax = (weight: number, reps: number): number => {
 const SetFrame: React.FC<SetFrameProps> = ({ item, index, onDelete, isBestSet = false }) => {
     const [isPressed, setIsPressed] = useState(false);
     const scaleAnim = useRef(new Animated.Value(1)).current;
-    
+
     const oneRepMax = calculateOneRepMax(item.weight, item.reps);
 
     // Handle press animation
@@ -74,21 +76,21 @@ const SetFrame: React.FC<SetFrameProps> = ({ item, index, onDelete, isBestSet = 
                                 {index + 1}
                             </Text>
                         </View>
-                        
+
                         {/* Weight and reps */}
                         <View className="flex-1 ml-3">
                             <View className="flex-row items-baseline">
                                 <Text className="text-discord-text text-xl font-bold">
-                                    {item.weight} 
+                                    {item.weight}
                                 </Text>
                                 <Text className="text-discord-muted text-sm ml-1">
                                     lbs
                                 </Text>
-                                
+
                                 <Text className="text-discord-text text-lg mx-2">
                                     ×
                                 </Text>
-                                
+
                                 <Text className="text-discord-text text-xl font-bold">
                                     {item.reps}
                                 </Text>
@@ -96,23 +98,23 @@ const SetFrame: React.FC<SetFrameProps> = ({ item, index, onDelete, isBestSet = 
                                     reps
                                 </Text>
                             </View>
-                            
-                            {/* Additional stats row */}
+
+                            {/* Stats row with date in parentheses after 1RM */}
                             <View className="flex-row mt-1">
                                 <Text className="text-discord-muted text-xs">
-                                    Est. 1RM: {oneRepMax} lbs
+                                    Est. 1RM: {oneRepMax} lbs <Text>({item.date})</Text>
                                 </Text>
                             </View>
                         </View>
-                        
+
                         {/* BEST SET badge */}
                         {isBestSet && (
                             <View className="bg-green-600 px-2 py-1 rounded mr-2">
                                 <Text className="text-white text-xs font-bold">BEST SET</Text>
                             </View>
                         )}
-                        
-                        {/* Delete button - Using the consistent style */}
+
+                        {/* Delete button */}
                         <TouchableOpacity
                             onPress={() => onDelete(index)}
                             className="bg-discord-error/10 rounded-lg p-2"

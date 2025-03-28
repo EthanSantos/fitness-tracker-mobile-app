@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Animated } from 'react-native';
 import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { Set } from '@/app/types';
 
 type Workout = {
     id: string;
@@ -10,7 +11,7 @@ type Workout = {
 type Exercise = {
     id: string;
     name: string;
-    sets: { reps: number; weight: number }[];
+    sets: Set[];
     date: string;
 }
 

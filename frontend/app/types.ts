@@ -8,12 +8,13 @@ export type ChartData = {
 export type Set = {
     reps: number;
     weight: number;
+    date: string;
 };
 
 export type Exercise = {
     id: string;
     name: string;
-    sets: { reps: number; weight: number }[];
+    sets: Set[];
     date: string;
 };
 

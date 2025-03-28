@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Set } from '@/app/types';
 
 type Exercise = {
     id: string;
     name: string;
-    sets: { reps: number; weight: number }[];
+    sets: Set[];
     date: string;
 };
 
@@ -42,7 +43,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
     handleDeleteExercise,
 }) => {
     // Find the index of the best set based on estimated 1RM
-    const findBestSetIndex = (sets: { reps: number; weight: number }[]): number => {
+    const findBestSetIndex = (sets: Set[]): number => {
         if (sets.length === 0) return -1;
         
         let bestIndex = 0;
@@ -60,7 +61,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
     };
     
     // Calculate average weight across all sets
-    const calculateAvgWeight = (sets: { reps: number; weight: number }[]): string => {
+    const calculateAvgWeight = (sets: Set[]): string => {
         if (sets.length === 0) return "0";
         
         const totalWeight = sets.reduce((sum, set) => sum + set.weight, 0);

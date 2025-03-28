@@ -18,11 +18,12 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { showToast } from '../ui/ShowToast';
 import SetFrame from './SetFrame';
+import { Set } from '@/app/types';
 
 type Exercise = {
     id: string;
     name: string;
-    sets: { reps: number; weight: number }[];
+    sets: Set[];
     date: string;
 };
 
