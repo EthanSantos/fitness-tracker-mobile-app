@@ -58,10 +58,6 @@ export const useProfileState = () => {
 
     // Save profile data
     const handleSave = async () => {
-        if (!name || !age || !weight || !heightValue || !gender || !activityLevel || !fitnessGoal) {
-            showToast("error", "Incomplete Data", "Please fill in all fields.")
-            return;
-        }
 
         setIsSaving(true);
 
