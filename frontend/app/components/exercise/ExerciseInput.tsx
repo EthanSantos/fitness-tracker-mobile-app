@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 
-import ExerciseAutocomplete from './ExerciseAutocomplete';
 import ExerciseLibrary from './ExerciseLibrary';
 
 type ExerciseInputProps = {
