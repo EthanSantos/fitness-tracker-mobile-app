@@ -20,10 +20,8 @@ const ExerciseLibrary: React.FC<ExerciseLibraryProps> = ({ visible, closeExercis
     const [selectedExercise, setSelectedExercise] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
 
-    const allMuscleGroups = exerciseLibraryData.flatMap(exercise =>
-        exercise.muscle_groups.split(', ')
-    );
-    const categories = ["All", ...new Set(allMuscleGroups)];
+    const allMuscleGroups = exerciseLibraryData.flatMap(exercise => exercise.muscle_groups.split(', '));
+    const categories = ["All", ...new Set(allMuscleGroups)]; // dynamically create the categories
 
     const handleClose = () => {
         setSelectedExercise("");
@@ -76,14 +74,20 @@ const ExerciseLibrary: React.FC<ExerciseLibraryProps> = ({ visible, closeExercis
     };
 
     const renderItem = ({ item }: ExerciseProps) => {
+        const isSelected = item.exercise_name === selectedExercise;
+        
         return (
             <TouchableOpacity
                 onPress={() => setSelectedExercise(item.exercise_name)}
                 activeOpacity={0.7}
                 className="mb-3"
             >
-                <View className={`rounded-lg p-4 bg-discord-card ${item.exercise_name === selectedExercise ? 'border-2 border-discord-accent' : ''}`}>
-                    <Text className="text-discord-text text-lg font-medium mb-1">{item.exercise_name}</Text>
+                <View 
+                    className={`rounded-lg p-4 bg-discord-card ${isSelected ? 'border-2 border-discord-accent' : ''}`}
+                >
+                    <Text className={`text-discord-text text-lg ${isSelected ? 'font-bold' : 'font-medium'} mb-1`}>
+                        {item.exercise_name}
+                    </Text>
                     <Text className="text-discord-muted text-sm">{item.muscle_groups}</Text>
                 </View>
             </TouchableOpacity>
