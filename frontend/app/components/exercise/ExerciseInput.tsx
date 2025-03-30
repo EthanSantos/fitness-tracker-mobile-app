@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -8,28 +8,31 @@ import {
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 import ExerciseAutocomplete from './ExerciseAutocomplete';
+import ExerciseLibrary from './ExerciseLibrary';
 
 type ExerciseInputProps = {
-    exerciseName: string;
-    setExerciseName: (name: string) => void;
-    handleAddExercise: () => void;
+    handleAddExercise: (exerciseName: string) => void;
     handleClearExercises: () => void;
     exerciseCount?: number;
 };
 
 const ExerciseInput: React.FC<ExerciseInputProps> = ({
-    exerciseName,
-    setExerciseName,
     handleAddExercise,
     handleClearExercises,
     exerciseCount = 0,
 }) => {
-    // Handle add exercise with validation
-    const handleAddWithValidation = () => {
-        if (!exerciseName.trim()) return;
-        handleAddExercise();
+
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+    const openExerciseScreen = () => {
+        console.log("open the exercise screen");
+        setModalVisible(true)
+    }
+
+    const closeExerciseScreen = () => {
+        setModalVisible(false);
     };
-    
+
     // Confirmation for clearing exercises
     const confirmClearExercises = () => {
         Alert.alert(
@@ -37,15 +40,15 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             "Remove all exercises from your workout?",
             [
                 { text: "Cancel", style: "cancel" },
-                { 
-                    text: "Clear All", 
+                {
+                    text: "Clear All",
                     style: "destructive",
                     onPress: handleClearExercises
                 }
             ]
         );
     };
-    
+
     return (
         <View className="mb-6">
             {/* Simple heading with clear all button always visible */}
@@ -60,7 +63,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                         </Text>
                     )}
                 </View>
-                
+
                 {/* Clear button - always visible but disabled when no exercises */}
                 <TouchableOpacity
                     className={`flex-row items-center py-1 px-3 rounded-lg ${exerciseCount > 0 ? 'bg-discord-error/10' : 'opacity-40'}`}
@@ -73,20 +76,16 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                     </Text>
                 </TouchableOpacity>
             </View>
-            
-            {/* Clean, borderless input with subtle background */}
-            <View className="mb-4">
-                <ExerciseAutocomplete 
-                    exerciseName={exerciseName} 
-                    setExerciseName={setExerciseName}
-                />
-            </View>
-            
-            {/* Simple, clean button */}
+
+            <ExerciseLibrary
+                visible={modalVisible}
+                closeExerciseScreen={closeExerciseScreen}
+                handleAddExercise={handleAddExercise}
+            />
+
             <TouchableOpacity
-                className={`py-3 rounded-lg bg-discord-accent flex-row justify-center items-center ${!exerciseName.trim() ? 'opacity-50' : ''}`}
-                onPress={handleAddWithValidation}
-                disabled={!exerciseName.trim()}
+                className={`py-6 rounded-lg bg-discord-accent flex-row justify-center items-center`}
+                onPress={openExerciseScreen}
             >
                 <Ionicons name="add" size={20} color="#ffffff" />
                 <Text className="text-white font-medium ml-2">

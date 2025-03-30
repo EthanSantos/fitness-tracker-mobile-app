@@ -25,7 +25,6 @@ const ExerciseLog: React.FC = () => {
     const [exercisesByWorkout, setExercisesByWorkout] = useState<ExercisesByWorkout>({});
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [exerciseName, setExerciseName] = useState<string>('');
     const [reps, setReps] = useState<string>('');
     const [weight, setWeight] = useState<string>('');
 
@@ -75,9 +74,10 @@ const ExerciseLog: React.FC = () => {
         }
     };
 
-    const handleAddExercise = (): void => {
+    const handleAddExercise = (exerciseName: string): void => {
+        console.log(exerciseName)
         if (!exerciseName.trim()) {
-            Alert.alert('Error', 'Please enter an exercise name.');
+            Alert.alert('Error', 'Please select an exercise.');
             return;
         }
 
@@ -95,18 +95,17 @@ const ExerciseLog: React.FC = () => {
 
         showToast("success", "Exercise Added", exerciseName + " has been added!")
 
-        setExerciseName('');
         Keyboard.dismiss();
     };
 
     const getCurrentTime = () => {
         const now = new Date();
-        return now.toLocaleTimeString('en-US', { 
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true      // For AM/PM format
+        return now.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true      // For AM/PM format
         }).toLowerCase();   // Convert "PM" to "pm"
-      };
+    };
 
     const handleAddSet = (): void => {
         if (!reps.trim() || !weight.trim()) {
@@ -199,8 +198,6 @@ const ExerciseLog: React.FC = () => {
 
                 <View className="px-4">
                     <ExerciseInput
-                        exerciseName={exerciseName}
-                        setExerciseName={setExerciseName}
                         handleAddExercise={handleAddExercise}
                         handleClearExercises={handleClearExercises}
                         exerciseCount={(exercisesByWorkout[id] || []).length}
