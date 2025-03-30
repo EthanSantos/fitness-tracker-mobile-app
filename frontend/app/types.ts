@@ -43,5 +43,5 @@ export type ProfileData = {
     fitnessGoal: FitnessGoalOptions;
 }
 
-const placeholder = {}; // Placeholder default export
+const placeholder = {}; // placeholder default export
 export default placeholder;
