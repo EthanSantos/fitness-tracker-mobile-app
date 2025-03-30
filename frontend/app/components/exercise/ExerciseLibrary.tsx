@@ -26,6 +26,7 @@ const ExerciseLibrary: React.FC<ExerciseLibraryProps> = ({ visible, closeExercis
     const handleClose = () => {
         setSelectedExercise("");
         setSearchText("")
+        setSelectedCategory("All")
         closeExerciseScreen()
         setFilteredData(exerciseLibraryData);
     }
