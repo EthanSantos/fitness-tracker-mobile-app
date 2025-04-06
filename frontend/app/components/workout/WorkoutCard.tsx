@@ -51,12 +51,6 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
         }).start();
     };
 
-    const formattedDate = new Date(parseInt(item.id)).toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-    });
-
     const getTotalWeight = () => {
         return workoutExercises.reduce((total, exercise) => {
             return total + exercise.sets.reduce((setTotal, set) => setTotal + set.weight * set.reps, 0);
@@ -78,9 +72,6 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                         <View className="flex-1">
                             <Text className="text-discord-text text-xl font-bold tracking-tight mb-1">
                                 {item.name}
-                            </Text>
-                            <Text className="text-discord-muted text-sm">
-                                {formattedDate}
                             </Text>
                         </View>
                         <TouchableOpacity
