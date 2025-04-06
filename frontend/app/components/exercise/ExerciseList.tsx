@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Set } from '@/app/types';
-import { calculateOneRepMax } from '@/app/utils/fitness';
+import { calculateOneRepMax, calculateAvgWeight } from '@/app/utils/fitness';
 
 type Exercise = {
     id: string;
@@ -38,14 +38,6 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
         });
         
         return bestIndex;
-    };
-    
-    // Calculate average weight across all sets
-    const calculateAvgWeight = (sets: Set[]): string => {
-        if (sets.length === 0) return "0";
-        
-        const totalWeight = sets.reduce((sum, set) => sum + set.weight, 0);
-        return (totalWeight / sets.length).toFixed(1);
     };
     
     return (
