@@ -199,8 +199,6 @@ const Workouts: React.FC = () => {
         });
     };
 
-
-
     // Check if two dates are the same day, ignoring time
     const isSameDay = (date1: Date, date2: Date) => {
         return (
