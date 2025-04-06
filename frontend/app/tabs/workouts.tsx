@@ -17,8 +17,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { showToast } from '../components/ui/ShowToast';
 import WorkoutCard from '../components/workout/WorkoutCard';
 import InputWorkout from '../components/workout/InputWorkout';
-import WeeklyCalendar from '../components/workout/WeeklyCalendar'; // Import the calendar component
-import RecentExercises from '../components/workout/RecentExercises'; // Import the recent exercises component
+import WeeklyCalendar from '../components/workout/WeeklyCalendar';
+import RecentExercises from '../components/workout/RecentExercises';
+import EmptyWorkoutList from '../components/workout/EmptyWorkoutList';
 import { Set } from '../types';
 
 type Workout = {
@@ -282,13 +283,7 @@ const Workouts: React.FC = () => {
                                     />
                                 ))
                             ) : (
-                                <View className="bg-discord-card rounded-xl p-4 items-center justify-center" style={{ height: 150 }}>
-                                    <MaterialCommunityIcons name="calendar-blank" size={40} color="#5865F2" style={{ marginBottom: 10 }} />
-                                    <Text className="text-discord-text text-lg font-semibold">No workouts for this day</Text>
-                                    <Text className="text-discord-muted text-sm text-center mt-1">
-                                        Add a new workout or select another date
-                                    </Text>
-                                </View>
+                                <EmptyWorkoutList />
                             )}
 
                             {/* Recently Logged Exercises */}
