@@ -30,6 +30,7 @@ const InputWorkout: React.FC<InputWorkoutProps> = ({workoutName, setWorkoutName,
                 value={workoutName}
                 onChangeText={setWorkoutName}
                 onSubmitEditing={handleAddWorkout}
+                id="workout-input"
             />
 
             <TouchableOpacity
@@ -41,7 +42,6 @@ const InputWorkout: React.FC<InputWorkoutProps> = ({workoutName, setWorkoutName,
                 </Text>
             </TouchableOpacity>
         </View>
-
     );
 };
 
