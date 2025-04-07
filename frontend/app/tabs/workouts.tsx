@@ -19,7 +19,7 @@ import WeeklyCalendar from '../components/workout/WeeklyCalendar';
 import RecentExercises from '../components/workout/RecentExercises';
 import EmptyWorkoutList from '../components/workout/EmptyWorkoutList';
 import InputWorkout from '../components/workout/InputWorkout';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Workout, WorkoutData, ExerciseWithWorkoutId } from '../types';
 
 const Workouts: React.FC = () => {
@@ -298,7 +298,7 @@ const Workouts: React.FC = () => {
           elevation: 5,
         }}
       >
-        <MaterialCommunityIcons name="plus" size={30} color="#fff" />
+        <Ionicons name="add-outline" size={42} color="#fff" />
       </TouchableOpacity>
 
       {/* InputWorkout Modal */}
