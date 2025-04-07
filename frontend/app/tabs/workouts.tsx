@@ -108,18 +108,22 @@ const Workouts: React.FC = () => {
     return { exerciseCount, totalSets };
   };
 
-  // Handle adding a new workout
   const handleAddWorkout = () => {
     if (!workoutName.trim()) {
       Alert.alert('Error', 'Please enter a workout name');
       return;
     }
     
-    const timestamp = Date.now();
+    // Create a timestamp based on the selected date
+    // Set the time to noon (12:00) on the selected date to avoid timezone issues
+    const dateAtNoon = new Date(selectedDate);
+    dateAtNoon.setHours(12, 0, 0, 0);
+    const timestamp = dateAtNoon.getTime();
+    
     const newWorkout: Workout = {
       id: timestamp.toString(),
       name: workoutName.trim(),
-      date: new Date(timestamp).toLocaleDateString(),
+      date: selectedDate.toLocaleDateString(),
       exercises: [],
     };
     
