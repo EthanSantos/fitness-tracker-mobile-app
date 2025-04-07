@@ -1,6 +1,6 @@
 # Fitness Tracker Mobile App  
 
-A personal fitness project developed over winter break to track workouts and exercises. Built using **React Native** for the frontend and **Fastify** for the backend. Uploaded to TestFlight on iOS.
+A personal fitness project developed so I can track my workouts and exercises. Built using **React Native** for the frontend and **Fastify** for the backend. Uploaded to TestFlight on iOS.
 
 ---
 
