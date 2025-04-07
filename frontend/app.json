@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FitnessApp",
-    "slug": "FitnessApp",
+    "name": "Elevate",
+    "slug": "Elevate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ethansantos.FitnessApp"
+      "bundleIdentifier": "com.ethansantos.Elevate"
     },
     "android": {
       "adaptiveIcon": {
