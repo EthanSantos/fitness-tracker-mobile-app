@@ -137,7 +137,7 @@ const Workouts: React.FC = () => {
       name: workoutName.trim(),
     };
     showToast("success", "Added workout", `${workoutName} has been added to your workout plan!`);
-    const updatedWorkouts = [...workouts, newWorkout];
+    const updatedWorkouts = [newWorkout, ...workouts];
     setWorkouts(updatedWorkouts);
     saveWorkouts(updatedWorkouts);
     setWorkoutName('');
