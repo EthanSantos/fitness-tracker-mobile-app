@@ -18,11 +18,19 @@ export type Exercise = {
     date: string;
 };
 
-// Define a type for a workout
 export type Workout = {
+    id: string;
+    name: string;
     date: string; // Format: 'MM/DD/YYYY'
     exercises: Exercise[];
 };
+
+export type WorkoutData = {
+    workouts: Workout[];
+};
+
+// Additional type for recent exercises
+export type ExerciseWithWorkoutId = Exercise & { workoutId: string };
 
 export type GenderOptions = 'Male' | 'Female' | '';
 export type ActivityLevelOptions = 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active' | '';

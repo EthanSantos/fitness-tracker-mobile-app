@@ -1,37 +1,24 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Animated } from 'react-native';
 import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { Set } from '@/app/types';
-
-type Workout = {
-    id: string;
-    name: string;
-};
-
-type Exercise = {
-    id: string;
-    name: string;
-    sets: Set[];
-    date: string;
-}
+import { Workout } from '@/app/types';
 
 type WorkoutCardProps = {
     item: Workout;
-    exercises: Record<string, Exercise[]>;
-    getLatestWorkoutStats: (workoutId: string) => { exerciseCount: number; totalSets: number } | null;
-    navigateToWorkout: (workout: Workout) => void;
-    handleDeleteWorkout: (workoutId: string, workoutName: string) => void;
+    getLatestWorkoutStats: () => { exerciseCount: number; totalSets: number } | null;
+    navigateToWorkout: () => void;
+    handleDeleteWorkout: () => void;
 };
 
 const WorkoutCard: React.FC<WorkoutCardProps> = ({
     item,
-    exercises,
     getLatestWorkoutStats,
     navigateToWorkout,
     handleDeleteWorkout,
 }) => {
-    const stats = getLatestWorkoutStats(item.id);
-    const workoutExercises = exercises[item.id] || [];
+    const stats = getLatestWorkoutStats();
+    // Get exercises directly from the workout item
+    const workoutExercises = item.exercises || [];
     const hasExercises = workoutExercises.length > 0;
 
     // Animation for press feedback
@@ -61,7 +48,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <TouchableOpacity
                 className="bg-discord-card rounded-2xl mb-4 overflow-hidden border border-discord-card shadow-sm"
-                onPress={() => navigateToWorkout(item)}
+                onPress={navigateToWorkout}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
                 activeOpacity={1}
@@ -75,7 +62,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                             </Text>
                         </View>
                         <TouchableOpacity
-                            onPress={() => handleDeleteWorkout(item.id, item.name)}
+                            onPress={handleDeleteWorkout}
                             className="bg-discord-error/10 rounded-lg p-2.5"
                             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                         >

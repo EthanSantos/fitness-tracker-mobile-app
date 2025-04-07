@@ -20,26 +20,12 @@ import RecentExercises from '../components/workout/RecentExercises';
 import EmptyWorkoutList from '../components/workout/EmptyWorkoutList';
 import InputWorkout from '../components/workout/InputWorkout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Set } from '../types';
-
-type Workout = {
-  id: string;
-  name: string;
-};
-
-type Exercise = {
-  id: string;
-  name: string;
-  sets: Set[];
-  date: string;
-  workoutId?: string;
-};
+import { Workout, WorkoutData, ExerciseWithWorkoutId } from '../types';
 
 const Workouts: React.FC = () => {
   // State variables
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [exercises, setExercises] = useState<Record<string, Exercise[]>>({});
-  const [recentExercises, setRecentExercises] = useState<Exercise[]>([]);
+  const [workoutData, setWorkoutData] = useState<WorkoutData>({ workouts: [] });
+  const [recentExercises, setRecentExercises] = useState<ExerciseWithWorkoutId[]>([]);
   const [workoutName, setWorkoutName] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -56,17 +42,19 @@ const Workouts: React.FC = () => {
   }
 
   // Load workouts from AsyncStorage
-  const loadWorkouts = async () => {
+  const loadWorkoutData = async () => {
     try {
       setIsLoading(true);
-      const savedWorkouts = await AsyncStorage.getItem('workouts');
-      if (savedWorkouts) {
-        const parsedWorkouts = JSON.parse(savedWorkouts);
+      const savedData = await AsyncStorage.getItem('workout-data');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        
         // Sort workouts by ID (newest first)
-        const sortedWorkouts = parsedWorkouts.sort((a: Workout, b: Workout) => {
+        parsedData.workouts.sort((a: Workout, b: Workout) => {
           return parseInt(b.id) - parseInt(a.id);
         });
-        setWorkouts(sortedWorkouts);
+        
+        setWorkoutData(parsedData);
       }
     } catch (error) {
       console.error('Error loading workouts:', error);
@@ -77,52 +65,46 @@ const Workouts: React.FC = () => {
   };
 
   // Save workouts to AsyncStorage
-  const saveWorkouts = async (updatedWorkouts: Workout[]) => {
+  const saveWorkoutData = async (updatedData: WorkoutData) => {
     try {
-      await AsyncStorage.setItem('workouts', JSON.stringify(updatedWorkouts));
+      await AsyncStorage.setItem('workout-data', JSON.stringify(updatedData));
     } catch (error) {
-      console.error('Error saving workouts:', error);
-      Alert.alert('Error', 'Failed to save workout');
+      console.error('Error saving workout data:', error);
+      Alert.alert('Error', 'Failed to save workout data');
     }
   };
 
-  // Fetch exercises from AsyncStorage
-  const fetchExercises = async () => {
-    try {
-      const exercisesData = await AsyncStorage.getItem('exercisesByWorkout');
-      if (exercisesData) {
-        const parsedExercises = JSON.parse(exercisesData);
-        setExercises(parsedExercises);
-        // Extract recent exercises with workout dates
-        const recentExercisesWithWorkoutDates: Array<Exercise & { workoutId: string }> = [];
-        Object.entries(parsedExercises).forEach(([workoutId, workoutExercisesUntyped]) => {
-          const workoutExercises = workoutExercisesUntyped as Exercise[];
-          workoutExercises.forEach(exercise => {
-            recentExercisesWithWorkoutDates.push({
-              ...exercise,
-              workoutId,
-            });
-          });
+  // Extract recent exercises from all workouts
+  const generateRecentExercises = (workoutData: WorkoutData): ExerciseWithWorkoutId[] => {
+    const allExercises: ExerciseWithWorkoutId[] = [];
+    
+    workoutData.workouts.forEach(workout => {
+      workout.exercises.forEach(exercise => {
+        // Add workout ID as a property to each exercise for reference
+        allExercises.push({
+          ...exercise,
+          workoutId: workout.id
         });
-        // Sort by workout date (using workoutId as timestamp) descending and take most recent 5
-        const sortedExercises = recentExercisesWithWorkoutDates
-          .sort((a, b) => parseInt(b.workoutId) - parseInt(a.workoutId))
-          .slice(0, 5);
-        setRecentExercises(sortedExercises);
-      }
-    } catch (error) {
-      console.error('Error fetching exercises:', error);
-    }
+      });
+    });
+    
+    // Sort by workout date (using workoutId as timestamp) descending and take most recent 5
+    return allExercises
+      .sort((a, b) => parseInt(b.workoutId) - parseInt(a.workoutId))
+      .slice(0, 5);
   };
 
   // Get latest workout stats (exercise count and total sets)
   const getLatestWorkoutStats = (workoutId: string) => {
-    const workoutExercises = exercises[workoutId] || [];
-    const exerciseCount = workoutExercises.length;
-    const totalSets = workoutExercises.reduce(
+    const workout = workoutData.workouts.find(w => w.id === workoutId);
+    if (!workout) return { exerciseCount: 0, totalSets: 0 };
+    
+    const exerciseCount = workout.exercises.length;
+    const totalSets = workout.exercises.reduce(
       (sum, exercise) => sum + (exercise.sets?.length || 0),
       0
     );
+    
     return { exerciseCount, totalSets };
   };
 
@@ -132,14 +114,24 @@ const Workouts: React.FC = () => {
       Alert.alert('Error', 'Please enter a workout name');
       return;
     }
+    
+    const timestamp = Date.now();
     const newWorkout: Workout = {
-      id: Date.now().toString(),
+      id: timestamp.toString(),
       name: workoutName.trim(),
+      date: new Date(timestamp).toLocaleDateString(),
+      exercises: [],
     };
+    
     showToast("success", "Added workout", `${workoutName} has been added to your workout plan!`);
-    const updatedWorkouts = [newWorkout, ...workouts];
-    setWorkouts(updatedWorkouts);
-    saveWorkouts(updatedWorkouts);
+    
+    const updatedWorkoutData = {
+      ...workoutData,
+      workouts: [newWorkout, ...workoutData.workouts]
+    };
+    
+    setWorkoutData(updatedWorkoutData);
+    saveWorkoutData(updatedWorkoutData);
     setWorkoutName('');
     Keyboard.dismiss();
     setShowModal(false);
@@ -157,24 +149,24 @@ const Workouts: React.FC = () => {
           style: 'destructive',
           onPress: async () => {
             try {
-              // 1. Remove workout from workouts array
-              const updatedWorkouts = workouts.filter((w) => w.id !== workoutId);
-              setWorkouts(updatedWorkouts);
-              await saveWorkouts(updatedWorkouts);
-              // 2. Remove exercises associated with this workout
-              const updatedExercises = { ...exercises };
-              delete updatedExercises[workoutId];
-              setExercises(updatedExercises);
-              await AsyncStorage.setItem('exercisesByWorkout', JSON.stringify(updatedExercises));
-              // 3. Update recent exercises list
-              const updatedRecentExercises = recentExercises.filter(
-                exercise => exercise.workoutId !== workoutId
-              );
-              setRecentExercises(updatedRecentExercises);
+              // Remove workout from workouts array
+              const updatedWorkouts = workoutData.workouts.filter((w) => w.id !== workoutId);
+              
+              const updatedWorkoutData = {
+                ...workoutData,
+                workouts: updatedWorkouts
+              };
+              
+              setWorkoutData(updatedWorkoutData);
+              await saveWorkoutData(updatedWorkoutData);
+              
+              // Update recent exercises list
+              setRecentExercises(generateRecentExercises(updatedWorkoutData));
+              
               showToast("error", "Workout Removed", `${name} has been deleted.`);
             } catch (error) {
-              console.error("Error deleting workout and exercises:", error);
-              Alert.alert("Error", "Failed to delete workout and associated exercises");
+              console.error("Error deleting workout:", error);
+              Alert.alert("Error", "Failed to delete workout");
             }
           },
         },
@@ -201,20 +193,23 @@ const Workouts: React.FC = () => {
 
   // Filter workouts for the selected date
   const getWorkoutsForSelectedDate = () => {
-    return workouts.filter(workout => {
+    return workoutData.workouts.filter(workout => {
       const workoutDate = new Date(parseInt(workout.id));
       return isSameDay(workoutDate, selectedDate);
     });
   };
 
+  // Update recent exercises when workoutData changes
+  useEffect(() => {
+    if (workoutData.workouts.length > 0) {
+      setRecentExercises(generateRecentExercises(workoutData));
+    }
+  }, [workoutData]);
+
   // Fetch data when screen is focused
   useFocusEffect(
     useCallback(() => {
-      const fetchData = async () => {
-        await loadWorkouts();
-        await fetchExercises();
-      };
-      fetchData();
+      loadWorkoutData();
     }, [])
   );
 
@@ -259,10 +254,9 @@ const Workouts: React.FC = () => {
                   <WorkoutCard
                     key={workout.id}
                     item={workout}
-                    exercises={exercises}
-                    getLatestWorkoutStats={getLatestWorkoutStats}
-                    navigateToWorkout={(workout) => navigateToWorkout(workout)}
-                    handleDeleteWorkout={handleDeleteWorkout}
+                    getLatestWorkoutStats={() => getLatestWorkoutStats(workout.id)}
+                    navigateToWorkout={() => navigateToWorkout(workout)}
+                    handleDeleteWorkout={() => handleDeleteWorkout(workout.id, workout.name)}
                   />
                 ))
               ) : (
@@ -272,9 +266,9 @@ const Workouts: React.FC = () => {
               <RecentExercises
                 exercises={recentExercises}
                 onExercisePress={(exercise) => {
-                  const workoutId = exercise.workoutId;
+                  const workoutId = (exercise as ExerciseWithWorkoutId).workoutId;
                   if (!workoutId) return;
-                  const workout = workouts.find(w => w.id === workoutId);
+                  const workout = workoutData.workouts.find(w => w.id === workoutId);
                   if (!workout) return;
                   navigateToWorkout(workout);
                 }}

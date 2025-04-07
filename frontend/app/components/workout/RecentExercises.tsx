@@ -1,20 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Set } from '@/app/types';
+import { ExerciseWithWorkoutId } from '@/app/types';
 import { calculateAvgWeight } from '@/app/utils/fitness';
 
-type Exercise = {
-    id: string;
-    name: string;
-    sets: Set[];
-    date: string;
-    workoutId?: string;
-};
-
 type RecentExercisesProps = {
-    exercises: Exercise[];
-    onExercisePress?: (exercise: Exercise) => void;
+    exercises: ExerciseWithWorkoutId[];
+    onExercisePress?: (exercise: ExerciseWithWorkoutId) => void;
 };
 
 const RecentExercises: React.FC<RecentExercisesProps> = ({
@@ -31,7 +23,7 @@ const RecentExercises: React.FC<RecentExercisesProps> = ({
 
             {exercises.map(exercise => {
                 // Get date from workout ID instead of exercise date
-                const workoutDate = new Date(parseInt(exercise.workoutId || '0'));
+                const workoutDate = new Date(parseInt(exercise.workoutId));
                 const formattedDate = workoutDate.toLocaleDateString(undefined, {
                     month: 'short',
                     day: 'numeric'
