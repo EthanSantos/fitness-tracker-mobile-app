@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import CustomHeader from '../components/ui/Header';
-import { View, FlatList, Text, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { RefreshControl, View, FlatList, Text, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import CustomHeader from '../components/ui/Header';
 import ChartContainer from '../components/ui/ChartContainer';
 import ExerciseBreakdown from '../components/analytics/ExerciseBreakdown';
 import StatsCard from '../components/analytics/StatsCard';
@@ -17,26 +17,41 @@ const Analytics: React.FC = () => {
     const [selectedTimeframe, setSelectedTimeframe] = useState<'day' | 'week'>('day');
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     // Load workout data from AsyncStorage
-    useEffect(() => {
-        const loadWorkoutData = async () => {
-            try {
-                setIsLoading(true);
-                const savedData = await AsyncStorage.getItem('workout-data');
-                if (savedData) {
-                    const parsedData: WorkoutData = JSON.parse(savedData);
-                    setWorkouts(parsedData.workouts || []);
-                }
-            } catch (error) {
-                console.error('Error loading workout data:', error);
-            } finally {
-                setIsLoading(false);
+    const loadWorkoutData = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            const savedData = await AsyncStorage.getItem('workout-data');
+            if (savedData) {
+                const parsedData: WorkoutData = JSON.parse(savedData);
+                setWorkouts(parsedData.workouts || []);
             }
-        };
-
-        loadWorkoutData();
+        } catch (error) {
+            console.error('Error loading workout data:', error);
+        } finally {
+            setIsLoading(false);
+        }
     }, []);
+
+    useEffect(() => {
+        loadWorkoutData();
+    }, [loadWorkoutData]);
+
+    // Pull to refresh handler
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        try {
+            // Add a minimum delay to prevent too-quick refresh
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await loadWorkoutData();
+        } catch (error) {
+            console.error('Error refreshing data:', error);
+        } finally {
+            setRefreshing(false);
+        }
+    }, [loadWorkoutData]);
 
     function parseDate(dateString: string): Date {
         // parse data in the correct date format
@@ -209,6 +224,16 @@ const Analytics: React.FC = () => {
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()} // Safe for an empty list
             className="flex-1 bg-discord-background"
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={['#5865F2']}
+                    tintColor="#5865F2"
+                    progressViewOffset={50} 
+                    progressBackgroundColor="#2C2F33"
+                />
+            }
             ListHeaderComponent={
                 <>
                     <CustomHeader title="Analytics" titleAlign="center" />
