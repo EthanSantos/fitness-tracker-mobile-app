@@ -10,14 +10,19 @@ import { ChartData } from './types';
 const ExerciseChart: React.FC = () => {
     const { exercise, data } = useLocalSearchParams();
     const [chartData, setChartData] = useState<ChartData[]>([]);
+    const [sortedHistoryData, setSortedHistoryData] = useState<ChartData[]>([]);
     const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
 
-    function dateComparison(a: ChartData, b: ChartData) {
-        const [monthA, dayA] = a.label.split('/').map(Number);
-        const [monthB, dayB] = b.label.split('/').map(Number);
+    function chronologicalDateComparison(a: ChartData, b: ChartData) {
+        const [monthA, dayA, yearA] = a.label.split('/').map(Number);
+        const [monthB, dayB, yearB] = b.label.split('/').map(Number);
     
-        // Compare months first, then days
-        return monthB - monthA || dayB - dayA;
+        // Create comparable date objects
+        const dateA = new Date(yearA || new Date().getFullYear(), monthA - 1, dayA);
+        const dateB = new Date(yearB || new Date().getFullYear(), monthB - 1, dayB);
+    
+        // Reverse the comparison to sort newest first
+        return dateB.getTime() - dateA.getTime();
     }
 
     useEffect(() => {
@@ -25,6 +30,10 @@ const ExerciseChart: React.FC = () => {
             try {
                 const parsedData = JSON.parse(data as string);
                 setChartData(parsedData);
+                
+                // Create a separate sorted array for history display
+                setSortedHistoryData([...parsedData].sort(chronologicalDateComparison));
+                
                 console.log(parsedData)
             } catch (error) {
                 console.error('Error parsing chart data:', error);
@@ -104,7 +113,7 @@ const ExerciseChart: React.FC = () => {
                                     <Text className="text-discord-muted font-semibold">1RM (lbs)</Text>
                                 </View>
                             </View>
-                            {chartData.sort(dateComparison).map((item, index) => (
+                            {sortedHistoryData.map((item, index) => (
                                 <View key={index} className="flex-row justify-between py-2">
                                     <Text className="text-discord-text">{item.label}</Text>
                                     <Text className="text-discord-text font-bold">{item.value}</Text>
@@ -119,4 +128,3 @@ const ExerciseChart: React.FC = () => {
 };
 
 export default ExerciseChart;
-
