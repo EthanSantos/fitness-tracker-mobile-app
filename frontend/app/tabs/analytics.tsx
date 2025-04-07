@@ -26,13 +26,6 @@ const Analytics: React.FC = () => {
         return new Date(`${year}-${month}-${day}`);
     }
 
-    function dateComparison(a: Workout, b: Workout) {
-        const date1 = parseDate(a.date)
-        const date2 = parseDate(b.date)
-
-        return date1.valueOf() - date2.valueOf();
-    }
-
     const getExerciseChartData = (exerciseName: string): ChartData[] => {
         // need to sort exercise data by date first - use the exact same calculation logic
         // but ensure dates are sorted chronologically (oldest to newest)
