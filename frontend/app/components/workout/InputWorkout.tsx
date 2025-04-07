@@ -205,7 +205,7 @@ const InputWorkout: React.FC<InputWorkoutProps> = ({
                   {/* Input field */}
                   <TextInput
                     className="bg-discord-background text-discord-text text-lg px-4 py-3 rounded-lg mb-3"
-                    placeholder="What's your workout plan? (E.g. - Chest)"
+                    placeholder="What's your workout plan? (E.g. - Chest Day)"
                     placeholderTextColor="#72767D"
                     value={workoutName}
                     onChangeText={setWorkoutName}
