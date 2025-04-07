@@ -1,6 +1,6 @@
 import { Workout } from "../../types";
 
-export const workoutData: { workouts: Workout[] } = {
+export const sampleWorkoutData: { workouts: Workout[] } = {
   workouts: [
     // Week 1
     {
@@ -390,4 +390,4 @@ export const workoutData: { workouts: Workout[] } = {
   ]
 };
 
-export default workoutData;
+export default sampleWorkoutData;

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomHeader from '../components/ui/Header';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ChartContainer from '../components/ui/ChartContainer';
 import ExerciseBreakdown from '../components/analytics/ExerciseBreakdown';
@@ -8,17 +9,34 @@ import StatsCard from '../components/analytics/StatsCard';
 import StrongestLifts from '../components/analytics/StrongestLifts';
 import TimeframeSelector from '../components/analytics/TimeframeSelector';
 
-import { workoutData } from '../components/analytics/MockWorkoutData';
-
-import { Workout, ChartData } from '../types';
+import { Workout, ChartData, WorkoutData } from '../types';
 
 import { calculateOneRepMax } from '../utils/fitness';
 
 const Analytics: React.FC = () => {
     const [selectedTimeframe, setSelectedTimeframe] = useState<'day' | 'week'>('day');
-    
-    // Extract the workouts array from our new structure
-    const workouts = workoutData.workouts || [];
+    const [workouts, setWorkouts] = useState<Workout[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Load workout data from AsyncStorage
+    useEffect(() => {
+        const loadWorkoutData = async () => {
+            try {
+                setIsLoading(true);
+                const savedData = await AsyncStorage.getItem('workout-data');
+                if (savedData) {
+                    const parsedData: WorkoutData = JSON.parse(savedData);
+                    setWorkouts(parsedData.workouts || []);
+                }
+            } catch (error) {
+                console.error('Error loading workout data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadWorkoutData();
+    }, []);
 
     function parseDate(dateString: string): Date {
         // parse data in the correct date format
@@ -27,24 +45,23 @@ const Analytics: React.FC = () => {
     }
 
     const getExerciseChartData = (exerciseName: string): ChartData[] => {
-        // need to sort exercise data by date first - use the exact same calculation logic
-        // but ensure dates are sorted chronologically (oldest to newest)
+        // Extract exercises with the matching name from each workout
         const exerciseData = [...workouts]
             .map((workout) => {
-                const exercise = workout.exercises.find((e) => e.name === exerciseName); // gets all the exercise data for the exerciseName we are looking for
+                const exercise = workout.exercises.find((e) => e.name === exerciseName);
                 if (exercise) {
-                    const oneRepMax = Math.max(...exercise.sets.map((set) => calculateOneRepMax(set.weight, set.reps))); // calculates the one rep max for every set that day and gets the highest one
+                    const oneRepMax = Math.max(...exercise.sets.map((set) => calculateOneRepMax(set.weight, set.reps)));
                     const [week, day] = workout.date.split('/');
                     return { 
                         value: oneRepMax, 
                         label: `${week}/${day}`,
-                        date: parseDate(workout.date) // Store date for sorting
+                        date: parseDate(workout.date)
                     };
                 }
                 return { 
                     value: 0, 
                     label: workout.date,
-                    date: parseDate(workout.date) // Store date for sorting
+                    date: parseDate(workout.date)
                 };
             })
             .filter((data) => data.value > 0); // Remove dates with 0 weight
@@ -128,10 +145,10 @@ const Analytics: React.FC = () => {
             .map(({ value, label }) => ({ value, label })); // Return just value and label
     };
 
-
     const getStrongestLifts = (workouts: Workout[]) => {
         return workouts
-            .slice(0, 3)
+            .sort((a, b) => new Date(parseInt(b.id)).getTime() - new Date(parseInt(a.id)).getTime()) // Sort by date descending
+            .slice(0, 5) // Get the most recent 5 workouts
             .flatMap((workout) =>
                 workout.exercises.map((exercise) => {
                     const heaviestSet = exercise.sets.reduce((maxSet, currentSet) => {
@@ -145,7 +162,8 @@ const Analytics: React.FC = () => {
                     };
                 })
             )
-            .sort((a, b) => b.maxWeight - a.maxWeight); // Sort lifts by max weight in descending order
+            .sort((a, b) => b.maxWeight - a.maxWeight) // Sort lifts by max weight in descending order
+            .slice(0, 5); // Keep only the top 5 heaviest lifts
     };
 
     // Variables calculated using the functions
@@ -160,6 +178,30 @@ const Analytics: React.FC = () => {
     const uniqueExercises = Array.from(new Set(workouts.flatMap((workout) => workout.exercises.map((e) => e.name)))) // get a list of all the unique exercises
 
     const renderItem = () => null;
+    
+    if (isLoading) {
+        return (
+            <View className="flex-1 bg-discord-background justify-center items-center">
+                <ActivityIndicator size="large" color="#5865F2" />
+                <Text className="text-discord-text mt-4">Loading workout data...</Text>
+            </View>
+        );
+    }
+    
+    // Show message if no workouts found
+    if (workouts.length === 0) {
+        return (
+            <View className="flex-1 bg-discord-background">
+                <CustomHeader title="Analytics" titleAlign="center" />
+                <View className="flex-1 justify-center items-center px-6">
+                    <Text className="text-discord-text text-xl text-center mb-4">No workout data yet</Text>
+                    <Text className="text-discord-muted text-center">
+                        Start adding workouts to see your progress and analytics here.
+                    </Text>
+                </View>
+            </View>
+        );
+    }
     
     return (
         <FlatList
