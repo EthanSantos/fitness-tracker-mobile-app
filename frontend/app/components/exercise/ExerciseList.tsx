@@ -1,15 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Set } from '@/app/types';
-import { calculateOneRepMax, calculateAvgWeight } from '@/app/utils/fitness';
-
-type Exercise = {
-    id: string;
-    name: string;
-    sets: Set[];
-    date: string;
-};
+import { Set, Exercise } from '@/app/types';
+import { findBestSetIndex, calculateAvgWeight } from '@/app/utils/fitness';
 
 type ExerciseListProps = {
     exercises: Exercise[];
@@ -22,23 +15,6 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
     handleExerciseSelect,
     handleDeleteExercise,
 }) => {
-    // Find the index of the best set based on estimated 1RM
-    const findBestSetIndex = (sets: Set[]): number => {
-        if (sets.length === 0) return -1;
-        
-        let bestIndex = 0;
-        let bestOneRM = 0;
-        
-        sets.forEach((set, index) => {
-            const oneRM = calculateOneRepMax(set.weight, set.reps);
-            if (oneRM > bestOneRM) {
-                bestOneRM = oneRM;
-                bestIndex = index;
-            }
-        });
-        
-        return bestIndex;
-    };
     
     return (
         <FlatList

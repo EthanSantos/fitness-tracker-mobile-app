@@ -27,3 +27,21 @@ export const calculateAvgWeight = (sets: Set[]): string => {
     const totalWeight = sets.reduce((sum, set) => sum + set.weight, 0);
     return (totalWeight / sets.length).toFixed(1);
 };
+
+// Find the index of the best set based on estimated 1RM
+export const findBestSetIndex = (sets: Set[]): number => {
+    if (!sets || sets.length === 0) return -1;
+
+    let bestIndex = 0;
+    let bestOneRM = 0;
+
+    sets.forEach((set, index) => {
+        const oneRM = calculateOneRepMax(set.weight, set.reps);
+        if (oneRM > bestOneRM) {
+            bestOneRM = oneRM;
+            bestIndex = index;
+        }
+    });
+
+    return bestIndex;
+};

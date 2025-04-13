@@ -19,7 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { showToast } from '../ui/ShowToast';
 import SetFrame from './SetFrame';
 import { Exercise } from '@/app/types';
-import { calculateOneRepMax } from '@/app/utils/fitness';
+import { findBestSetIndex } from '@/app/utils/fitness';
 
 type ExerciseModalProps = {
     modalVisible: boolean;
@@ -58,23 +58,8 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
     const [setToDelete, setSetToDelete] = useState<number | null>(null);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-    // Find the best set index
-    const findBestSetIndex = useCallback(() => {
-        if (!selectedExercise || selectedExercise.sets.length === 0) return -1;
-
-        let bestIndex = 0;
-        let bestOneRM = 0;
-
-        selectedExercise.sets.forEach((set, index) => {
-            const oneRM = calculateOneRepMax(set.weight, set.reps);
-            if (oneRM > bestOneRM) {
-                bestOneRM = oneRM;
-                bestIndex = index;
-            }
-        });
-
-        return bestIndex;
-    }, [selectedExercise]);
+    // Get the best set index
+    const bestSetIndex = selectedExercise ? findBestSetIndex(selectedExercise.sets) : -1;
 
     // Close modal with animation
     const closeModal = useCallback(() => {
@@ -236,9 +221,6 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
             repsInputRef.current.focus();
         }
     }, []);
-
-    // Get the best set index
-    const bestSetIndex = findBestSetIndex();
 
     return (
         <Modal
