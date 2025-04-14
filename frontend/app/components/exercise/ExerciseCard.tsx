@@ -15,8 +15,8 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 }) => {
     // Find the best set index
     const bestSetIndex = findBestSetIndex(item.sets);
-    
-    // Animation for press feedback (matching WorkoutCard behavior)
+
+    // press animation
     const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
     const handlePressIn = () => {
