@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Set, Exercise } from '@/app/types';
+import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Exercise } from '@/app/types';
 import { findBestSetIndex, calculateAvgWeight } from '@/app/utils/fitness';
 
 type ExerciseCardProps = {
@@ -13,108 +13,167 @@ type ExerciseCardProps = {
 const ExerciseCard: React.FC<ExerciseCardProps> = ({
     item, handleDeleteExercise, handleExerciseSelect
 }) => {
-
-    // find the best set index
+    // Find the best set index
     const bestSetIndex = findBestSetIndex(item.sets);
+    
+    // Animation for press feedback (matching WorkoutCard behavior)
+    const scaleAnim = React.useRef(new Animated.Value(1)).current;
+
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 0.97,
+            useNativeDriver: true,
+        }).start();
+    };
+
+    const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 1,
+            useNativeDriver: true,
+        }).start();
+    };
+
+    const hasNoSets = item.sets.length === 0;
 
     return (
-        <View className="mb-5">
+        <Animated.View style={{ transform: [{ scale: scaleAnim }] }} className="mb-4">
             <TouchableOpacity
                 onPress={() => handleExerciseSelect(item)}
-                activeOpacity={0.9}
-                className="bg-discord-extraCard rounded-xl overflow-hidden"
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                activeOpacity={1}
+                className="bg-discord-card rounded-2xl overflow-hidden border border-discord-card shadow-sm"
             >
                 {/* Top section with name and delete */}
-                <View className="bg-discord-card px-5 pt-5 pb-4">
-                    <View className="flex-row justify-between items-start">
+                <View className="px-5 py-4">
+                    <View className="flex-row justify-between items-center">
                         <View className="flex-1 mr-3">
-                            <Text className="text-xl font-bold text-discord-text">
+                            <Text className="text-discord-text text-xl font-bold tracking-tight">
                                 {item.name}
                             </Text>
                         </View>
                         <TouchableOpacity
                             onPress={() => handleDeleteExercise(item.id, item.name)}
-                            className="bg-discord-error/10 rounded-xl h-9 w-9 items-center justify-center"
+                            className="bg-discord-error/10 rounded-lg p-2.5"
+                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                         >
-                            <Ionicons name="trash-outline" size={16} color="#ED4245" />
+                            <Ionicons name="trash-outline" size={20} color="#ED4245" />
                         </TouchableOpacity>
                     </View>
-                </View>
 
-                {/* Stats row */}
-                {item.sets.length > 0 && (
-                    <View className="px-5 py-4 flex-row justify-between items-center bg-discord-card/30">
-                        <View className="items-center">
-                            <Text className="text-discord-muted text-xs uppercase">Sets</Text>
-                            <Text className="text-discord-text text-lg font-semibold">{item.sets.length}</Text>
+                    {/* Stats row - Only show if there are sets */}
+                    {!hasNoSets && (
+                        <View className="flex-row items-center justify-between mt-4 pt-4 border-t border-discord-background/30">
+                            <View className="flex-row items-center">
+                                <View className="bg-discord-accent/10 w-9 h-9 rounded-xl items-center justify-center mr-2">
+                                    <Ionicons name="layers-outline" size={18} color="#5865F2" />
+                                </View>
+                                <View>
+                                    <Text className="text-discord-text font-bold text-base">
+                                        {item.sets.length}
+                                    </Text>
+                                    <Text className="text-discord-muted text-xs">
+                                        {item.sets.length === 1 ? "Set" : "Sets"}
+                                    </Text>
+                                </View>
+                            </View>
+                            
+                            <View className="flex-row items-center">
+                                <View className="bg-discord-accent/10 w-9 h-9 rounded-xl items-center justify-center mr-2">
+                                    <MaterialCommunityIcons name="weight" size={18} color="#5865F2" />
+                                </View>
+                                <View>
+                                    <Text className="text-discord-text font-bold text-base">
+                                        {Math.max(...item.sets.map(s => s.weight))}
+                                    </Text>
+                                    <Text className="text-discord-muted text-xs">
+                                        Max (lbs)
+                                    </Text>
+                                </View>
+                            </View>
+                            
+                            <View className="flex-row items-center">
+                                <View className="bg-discord-accent/10 w-9 h-9 rounded-xl items-center justify-center mr-2">
+                                    <MaterialCommunityIcons name="calculator-variant-outline" size={18} color="#5865F2" />
+                                </View>
+                                <View>
+                                    <Text className="text-discord-text font-bold text-base">
+                                        {calculateAvgWeight(item.sets)}
+                                    </Text>
+                                    <Text className="text-discord-muted text-xs">
+                                        Avg (lbs)
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
+                    )}
 
-                        <View className="h-8 w-px bg-discord-border/20" />
-
-                        <View className="items-center flex-1 px-2">
-                            <Text className="text-discord-muted text-xs uppercase whitespace-nowrap">Max Weight</Text>
-                            <Text className="text-discord-text text-lg font-semibold">
-                                {Math.max(...item.sets.map(s => s.weight))} lbs
-                            </Text>
+                    {/* Sets or Add Set CTA */}
+                    {hasNoSets ? (
+                        <View className="mt-4 pt-4 border-t border-discord-background/30">
+                            <TouchableOpacity 
+                                className="flex-row items-center justify-center py-3 px-4 bg-discord-accent/10 rounded-xl"
+                                onPress={() => handleExerciseSelect(item)}
+                            >
+                                <Ionicons name="add-circle-outline" size={20} color="#5865F2" />
+                                <Text className="text-discord-accent font-medium ml-2">
+                                    Tap to add your first set
+                                </Text>
+                            </TouchableOpacity>
                         </View>
+                    ) : (
+                        <View className="mt-4">
 
-                        <View className="h-8 w-px bg-discord-border/20" />
-
-                        <View className="items-center">
-                            <Text className="text-discord-muted text-xs uppercase">Avg Weight</Text>
-                            <Text className="text-discord-text text-lg font-semibold">
-                                {calculateAvgWeight(item.sets)} lbs
-                            </Text>
-                        </View>
-                    </View>
-                )}
-
-                {/* Sets listing */}
-                <View className="p-5">
-                    {item.sets.length > 0 ? (
-                        <View>
+                            
+                            {/* Sets listing */}
                             {item.sets.map((set, index) => (
-                                <View key={index} className={`mb-4 ${index === item.sets.length - 1 ? '' : 'pb-4 border-b border-discord-card/40'}`}>
-                                    <View className="flex-row items-center justify-between">
-                                        <View className="flex-row items-center">
-                                            <View className="bg-discord-accent rounded-xl h-8 w-8 items-center justify-center mr-3">
-                                                <Text className="text-white text-sm font-bold">{index + 1}</Text>
-                                            </View>
-                                            <Text className="text-discord-text font-semibold">Set {index + 1}</Text>
-
-                                            {/* Best Set Badge */}
-                                            {index === bestSetIndex && (
-                                                <View className="bg-green-600 ml-2 px-2 py-0.5 rounded-lg">
-                                                    <Text className="text-white text-xs font-bold">BEST SET</Text>
-                                                </View>
-                                            )}
+                                <View 
+                                    key={index} 
+                                    className={`flex-row items-center justify-between py-3 ${
+                                        index !== item.sets.length - 1 ? 'border-b border-discord-background/20' : ''
+                                    }`}
+                                >
+                                    <View className="flex-row items-center">
+                                        <View className={`${index === bestSetIndex ? 'bg-green-600' : 'bg-discord-accent/20'} w-8 h-8 rounded-lg items-center justify-center mr-3`}>
+                                            <Text className={`${index === bestSetIndex ? 'text-white' : 'text-discord-accent'} font-bold text-sm`}>
+                                                {index + 1}
+                                            </Text>
                                         </View>
-                                        <View className="flex-row">
-                                            <View className="bg-discord-card px-3 py-2 rounded-xl mr-2">
-                                                <Text className="text-discord-text font-medium">{set.reps} reps</Text>
+                                        
+                                        {index === bestSetIndex && (
+                                            <View className="bg-green-600/10 px-2 py-1 rounded-md">
+                                                <Text className="text-green-600 text-xs font-bold">BEST SET</Text>
                                             </View>
-                                            <View className="bg-discord-card px-3 py-2 rounded-xl">
-                                                <Text className="text-discord-text font-medium">{set.weight} lbs</Text>
-                                            </View>
+                                        )}
+                                    </View>
+                                    
+                                    <View className="flex-row items-center">
+                                        <View className="bg-discord-background px-3 py-1.5 rounded-lg mr-2">
+                                            <Text className="text-discord-text font-medium text-sm">{set.reps} reps</Text>
+                                        </View>
+                                        <View className="bg-discord-background px-3 py-1.5 rounded-lg">
+                                            <Text className="text-discord-text font-medium text-sm">{set.weight} lbs</Text>
                                         </View>
                                     </View>
                                 </View>
                             ))}
-                        </View>
-                    ) : (
-                        <View className="py-3 flex-row items-center justify-center">
-                            <View className="bg-discord-card/50 rounded-lg px-4 py-2.5 flex-row items-center">
-                                <Ionicons name="add-circle-outline" size={18} color="#5865F2" />
-                                <Text className="text-discord-accent text-sm font-medium ml-2">
-                                    Add your first set
+                            
+                            {/* Add another set button - Now with transparent background */}
+                            <TouchableOpacity 
+                                className="flex-row items-center justify-center mt-4 py-3 bg-discord-accent/10 rounded-xl"
+                                onPress={() => handleExerciseSelect(item)}
+                            >
+                                <Ionicons name="add-circle-outline" size={20} color="#5865F2" />
+                                <Text className="text-discord-accent font-medium ml-2">
+                                    Add another set
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
                         </View>
                     )}
                 </View>
             </TouchableOpacity>
-        </View>
-    )
+        </Animated.View>
+    );
 };
 
-export default ExerciseCard
+export default ExerciseCard;
