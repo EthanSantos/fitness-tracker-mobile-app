@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { RefreshControl, View, FlatList, Text, ActivityIndicator } from 'react-native';
+import { RefreshControl, View, FlatList, Text, ActivityIndicator, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import CustomHeader from '../components/ui/Header';
@@ -67,20 +67,20 @@ const Analytics: React.FC = () => {
                 if (exercise) {
                     const oneRepMax = Math.max(...exercise.sets.map((set) => calculateOneRepMax(set.weight, set.reps)));
                     const [week, day] = workout.date.split('/');
-                    return { 
-                        value: oneRepMax, 
+                    return {
+                        value: oneRepMax,
                         label: `${week}/${day}`,
                         date: parseDate(workout.date)
                     };
                 }
-                return { 
-                    value: 0, 
+                return {
+                    value: 0,
                     label: workout.date,
                     date: parseDate(workout.date)
                 };
             })
             .filter((data) => data.value > 0); // Remove dates with 0 weight
-            
+
         // Sort by date (oldest to newest)
         return exerciseData
             .sort((a, b) => a.date.valueOf() - b.date.valueOf())
@@ -146,7 +146,7 @@ const Analytics: React.FC = () => {
         for (const [key, { totalWeight, totalSets, date }] of Object.entries(groupedData)) {
             const averageWeight = totalSets > 0 ? totalWeight / totalSets : 0;
             if (averageWeight > 0) {
-                dataWithDates.push({ 
+                dataWithDates.push({
                     value: Math.round(averageWeight), // Same rounding as before
                     label: key,
                     date: date // Store date for sorting
@@ -193,7 +193,7 @@ const Analytics: React.FC = () => {
     const uniqueExercises = Array.from(new Set(workouts.flatMap((workout) => workout.exercises.map((e) => e.name)))) // get a list of all the unique exercises
 
     const renderItem = () => null;
-    
+
     if (isLoading) {
         return (
             <View className="flex-1 bg-discord-background justify-center items-center">
@@ -202,22 +202,35 @@ const Analytics: React.FC = () => {
             </View>
         );
     }
-    
+
     // Show message if no workouts found
     if (workouts.length === 0) {
         return (
             <View className="flex-1 bg-discord-background">
                 <CustomHeader title="Analytics" titleAlign="center" />
-                <View className="flex-1 justify-center items-center px-6">
-                    <Text className="text-discord-text text-xl text-center mb-4">No workout data yet</Text>
-                    <Text className="text-discord-muted text-center">
-                        Start adding workouts to see your progress and analytics here.
-                    </Text>
-                </View>
+                <ScrollView
+                    className="flex-1"
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            colors={['#5865F2']}
+                            tintColor="#5865F2"
+                            progressBackgroundColor="#2C2F33"
+                        />
+                    }
+                >
+                    <View className="flex-1 justify-center items-center px-6 mt-40">
+                        <Text className="text-discord-text text-xl text-center mb-4">No workout data yet</Text>
+                        <Text className="text-discord-muted text-center">
+                            Start adding workouts to see your progress and analytics here.
+                        </Text>
+                    </View>
+                </ScrollView>
             </View>
         );
     }
-    
+
     return (
         <FlatList
             data={[]}
@@ -230,7 +243,7 @@ const Analytics: React.FC = () => {
                     onRefresh={onRefresh}
                     colors={['#5865F2']}
                     tintColor="#5865F2"
-                    progressViewOffset={50} 
+                    progressViewOffset={50}
                     progressBackgroundColor="#2C2F33"
                 />
             }
